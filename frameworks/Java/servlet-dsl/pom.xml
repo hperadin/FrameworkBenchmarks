@@ -13,8 +13,8 @@
 	</properties>
 	<repositories>
 		<repository>
-			<id>lib</id>
-			<url>file:${project.basedir}/lib</url>
+			<id>model-in-project-repo</id>
+			<url>file:${project.basedir}/model</url>
 		</repository>
 	</repositories>
 	<dependencies>
