@@ -5,7 +5,7 @@ using System.IO;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
-using FrameworkBench;
+using HelloWorld;
 using Revenj.Api;
 using Revenj.DomainPatterns;
 using Revenj.Extensibility;

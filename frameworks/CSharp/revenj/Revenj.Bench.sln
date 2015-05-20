@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Revenj.Bench", "Revenj.Benc
 EndProject
 Global
 	GlobalSection(DslPlatformSolutionProperties) = preSolution
-		ConnectionString = server=localhost;database=FrameworkBench;user=postgres;password=6666
+		ConnectionString = server=localhost;database=hello_world;user=benchdbuser;password=benchdbpass
 		PostgresMigration = True
 		ApplyMigration = True
 		SqlScriptsPath = .

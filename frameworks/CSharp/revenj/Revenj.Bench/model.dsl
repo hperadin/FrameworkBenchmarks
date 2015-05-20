@@ -1,7 +1,7 @@
 ﻿defaults {
 	notifications disabled;
 }
-module FrameworkBench {
+module HelloWorld {
 	value Message {
 		String message;
 	}

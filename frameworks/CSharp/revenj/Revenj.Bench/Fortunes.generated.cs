@@ -29,7 +29,7 @@ namespace ASP
 
         #line 3 "..\..\Fortunes.cshtml"
 
-    public List<FrameworkBench.Fortune> Model { get; set; }
+    public List<HelloWorld.Fortune> Model { get; set; }
 
         #line default
         #line hidden
