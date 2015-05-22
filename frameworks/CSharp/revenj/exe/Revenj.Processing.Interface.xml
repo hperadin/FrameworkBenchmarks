@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Revenj.Processing.Interface</name>
+    </assembly>
+    <members>
+        <member name="T:Revenj.Processing.ICommandResult`1">
+            <summary>
+            Server command execution result.
+            Http status from 200 to 300 are considered valid responses.
+            Invalid response will trigger transaction rollback.
+            </summary>
+            <typeparam name="TFormat">result type</typeparam>
+        </member>
+        <member name="P:Revenj.Processing.ICommandResult`1.Data">
+            <summary>
+            Result formatted in result type.
+            </summary>
+        </member>
+        <member name="P:Revenj.Processing.ICommandResult`1.Message">
+            <summary>
+            Command response message
+            </summary>
+        </member>
+        <member name="P:Revenj.Processing.ICommandResult`1.Status">
+            <summary>
+            Command execution status.
+            </summary>
+        </member>
+        <member name="T:Revenj.Processing.ICommandResultDescription`1">
+            <summary>
+            Executed command result paired with request id.
+            </summary>
+            <typeparam name="TFormat">result format</typeparam>
+        </member>
+        <member name="P:Revenj.Processing.ICommandResultDescription`1.RequestID">
+            <summary>
+            Request id from command description
+            </summary>
+        </member>
+        <member name="P:Revenj.Processing.ICommandResultDescription`1.Result">
+            <summary>
+            Execution result from server command
+            </summary>
+        </member>
+        <member name="P:Revenj.Processing.ICommandResultDescription`1.Duration">
+            <summary>
+            Total elapsed milliseconds.
+            </summary>
+        </member>
+        <member name="T:Revenj.Processing.IServerCommand">
+            <summary>
+            Generic server command.
+            Server command is added through MEF by exporting IServerCommand.
+            Server command can replace existing server command by using InsteadOf metadata.
+            </summary>
+        </member>
+        <member name="M:Revenj.Processing.IServerCommand.Execute``2(Revenj.Serialization.ISerialization{``0},Revenj.Serialization.ISerialization{``1},``0)">
+            <summary>
+            Execute single server command.
+            Convert provided input data to requested output result.
+            Input serialization is used to deserialize provided argument.
+            Output serialization is used to serialize requested result.
+            </summary>
+            <typeparam name="TInput">input format type</typeparam>
+            <typeparam name="TOutput">output format type</typeparam>
+            <param name="input">input deserializer</param>
+            <param name="output">output serializer</param>
+            <param name="data">command argument</param>
+            <returns>command response</returns>
+        </member>
+        <member name="T:Revenj.Processing.IReadOnlyServerCommand">
+            <summary>
+            If server command doesn't change data it can be declared as read-only server command.
+            This is used as optimization, since transaction scope is created only when at least one command requires transaction.
+            </summary>
+        </member>
+        <member name="T:Revenj.Processing.IServerCommandDescription`1">
+            <summary>
+            Server command description in specified format.
+            </summary>
+            <typeparam name="TFormat">input argument format</typeparam>
+        </member>
+        <member name="P:Revenj.Processing.IServerCommandDescription`1.RequestID">
+            <summary>
+            Request id used for pairing result with request.
+            </summary>
+        </member>
+        <member name="P:Revenj.Processing.IServerCommandDescription`1.CommandType">
+            <summary>
+            Resolved command type from command name.
+            </summary>
+        </member>
+        <member name="P:Revenj.Processing.IServerCommandDescription`1.Data">
+            <summary>
+            Command argument.
+            </summary>
+        </member>
+        <member name="T:Revenj.Processing.IProcessingResult`1">
+            <summary>
+            Commands execution result.
+            Aggregated result of command executions.
+            </summary>
+            <typeparam name="TFormat">result format</typeparam>
+        </member>
+        <member name="P:Revenj.Processing.IProcessingResult`1.Message">
+            <summary>
+            Global result message.
+            </summary>
+        </member>
+        <member name="P:Revenj.Processing.IProcessingResult`1.Status">
+            <summary>
+            Global result status.
+            </summary>
+        </member>
+        <member name="P:Revenj.Processing.IProcessingResult`1.ExecutedCommandResults">
+            <summary>
+            Specific results for each commands.
+            </summary>
+        </member>
+        <member name="P:Revenj.Processing.IProcessingResult`1.Duration">
+            <summary>
+            Total elapsed milliseconds.
+            </summary>
+        </member>
+        <member name="T:Revenj.Processing.IServerService`2">
+            <summary>
+            Simpler interface for server command.
+            Instead of providing serialization object to command,
+            prepare and convert arguments and result outside of command.
+            </summary>
+            <typeparam name="TInput">input argument type</typeparam>
+            <typeparam name="TOutput">output result type</typeparam>
+        </member>
+        <member name="M:Revenj.Processing.IServerService`2.Execute(`0)">
+            <summary>
+            Execute service with provided argument.
+            </summary>
+            <param name="data">service argument</param>
+            <returns>service result</returns>
+        </member>
+        <member name="T:Revenj.Processing.IProcessingEngine">
+            <summary>
+            Service for processing server commands.
+            Server commands are loaded from description information.
+            Commands are executed and result is transformed to requested output type.
+            </summary>
+        </member>
+        <member name="M:Revenj.Processing.IProcessingEngine.Execute``2(Revenj.Processing.IServerCommandDescription{``0}[])">
+            <summary>
+            Execute server commands.
+            Command arguments are defined with input format type.
+            Result is expected in specified output format type.
+            Commands are executed in a single transaction.
+            </summary>
+            <typeparam name="TInput">command argument type</typeparam>
+            <typeparam name="TOutput">executed result type</typeparam>
+            <param name="commands">commands description</param>
+            <returns>aggregated execution result</returns>
+        </member>
+    </members>
+</doc>

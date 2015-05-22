@@ -1,0 +1,377 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Revenj.Utility</name>
+    </assembly>
+    <members>
+        <member name="T:Revenj.Utility.PdfConverter">
+            <summary>
+            Utility for converting files to PDF.
+            External PdfConverter utility will be invoked for conversion.
+            Path to PdfConverter can't have whitespaces in it (since tool will be invoked using cmd.exe)
+            PdfConverterTimeout specify maximum amount of time conversion can take (20 seconds by default).
+            </summary>
+        </member>
+        <member name="M:Revenj.Utility.PdfConverter.Convert(System.Byte[],System.String)">
+            <summary>
+            Convert provided file content to PDF. 
+            Specify extension of the file.
+            </summary>
+            <param name="content">file content</param>
+            <param name="ext">file extension</param>
+            <returns>PDF converted file</returns>
+        </member>
+        <member name="M:Revenj.Utility.PdfConverter.Convert(System.IO.Stream,System.String,System.Boolean)">
+            <summary>
+            Convert provided stream content to PDF.
+            Specify extension of the file
+            </summary>
+            <param name="content">file content</param>
+            <param name="ext">file extension</param>
+            <param name="disposeStream">dispose provided stream after conversion</param>
+            <returns>PDF converted stream</returns>
+        </member>
+        <member name="T:Revenj.Utility.TypeUtility">
+            <summary>
+            Utility for working with reflection
+            </summary>
+        </member>
+        <member name="M:Revenj.Utility.TypeUtility.GetTypeHierarchy(System.Type)">
+            <summary>
+            Get type hierarchy for specified type.
+            All interfaces and base types will be returned.
+            Result will be cached.
+            </summary>
+            <param name="startType">specified type</param>
+            <returns>all implemented interfaces and base types</returns>
+        </member>
+        <member name="T:Revenj.Utility.TemporaryResources">
+            <summary>
+            Access to temporary files.
+            Default temporary folder is created at Revenj/Temp subfolder in system temporary folder
+            Can be overridden with configuration settings: TemporaryPath
+            </summary>
+        </member>
+        <member name="M:Revenj.Utility.TemporaryResources.CreateFile(System.String)">
+            <summary>
+            Create file with specified extension.
+            File will be created in configured temporary folder.
+            </summary>
+            <param name="extension">created file extension</param>
+            <returns>path to created file</returns>
+        </member>
+        <member name="M:Revenj.Utility.TemporaryResources.TempFile(System.String)">
+            <summary>
+            Create file in temporary folder with specified name.
+            </summary>
+            <param name="name">file name</param>
+            <returns>full path to created file</returns>
+        </member>
+        <member name="M:Revenj.Utility.TemporaryResources.LoadAssembly(System.IO.Stream)">
+            <summary>
+            Load assembly from provided stream. Assembly will be loaded into current AppDomain.
+            Assembly will be saved to temporary folder and loaded from there.
+            </summary>
+            <param name="content">assembly content</param>
+            <returns>loaded assembly</returns>
+        </member>
+        <member name="M:Revenj.Utility.TemporaryResources.LoadDynamicAssembly(System.Byte[])">
+            <summary>
+            Load assembly from provided content. Assembly will be loaded into current AppDomain.
+            Assembly will be saved to dynamic temporary folder and loaded from there.
+            </summary>
+            <param name="content">assembly content</param>
+            <returns>loaded assembly</returns>
+        </member>
+        <member name="M:Revenj.Utility.TemporaryResources.CloneFile(System.String)">
+            <summary>
+            Create copy of the file in the temporary folder.
+            </summary>
+            <param name="file">original file</param>
+            <returns>path to copied file</returns>
+        </member>
+        <member name="M:Revenj.Utility.TemporaryResources.CreateRandomObject(System.Type)">
+            <summary>
+            Create instance of specified type and populate it with
+            random values.
+            </summary>
+            <param name="target">object type</param>
+            <returns>object instance</returns>
+        </member>
+        <member name="T:Revenj.Utility.Exceptions">
+            <summary>
+            Utility for exception reporting.
+            Check if application debug mode is enabled.
+            Unroll exceptions in better description.
+            </summary>
+        </member>
+        <member name="M:Revenj.Utility.Exceptions.GetMessages(System.Exception)">
+            <summary>
+            Get messages for this exception.
+            Unroll exception stack to single message. 
+            Aggregate exceptions will be unrolled too.
+            Only exception message is used.
+            </summary>
+            <param name="exception">top exception</param>
+            <returns>error message</returns>
+        </member>
+        <member name="M:Revenj.Utility.Exceptions.GetDetailedExplanation(System.Exception)">
+            <summary>
+            Get detailed messages for this exception.
+            Unroll exception stack to single message. 
+            Aggregate exceptions will be unrolled too.
+            Whole stack trace will be used for each exception.
+            </summary>
+            <param name="exception">top exception</param>
+            <returns>error message</returns>
+        </member>
+        <member name="P:Revenj.Utility.Exceptions.DebugMode">
+            <summary>
+            Check if application is running in debug mode.
+            Set in application config (configuration/appSettings) as &lt;add key="ApplicationMode" value="Debug"/&gt;
+            </summary>
+        </member>
+        <member name="T:Revenj.Utility.ChunkedMemoryStream">
+            <summary>
+            In memory stream with 8192 blocks to avoid LOH issues.
+            Since .NET places objects larger that 85000 bytes into LOH, 
+            avoid it as much as possible by using list of smaller blocks.
+            </summary>
+        </member>
+        <member name="M:Revenj.Utility.ChunkedMemoryStream.Create">
+            <summary>
+            Create or get a new instance of memory stream
+            </summary>
+            <returns>usable memory stream instance</returns>
+        </member>
+        <member name="M:Revenj.Utility.ChunkedMemoryStream.#ctor">
+            <summary>
+            Create new empty stream
+            </summary>
+        </member>
+        <member name="M:Revenj.Utility.ChunkedMemoryStream.#ctor(System.IO.Stream)">
+            <summary>
+            Create in memory stream based on another stream.
+            Provided stream will not be disposed.
+            </summary>
+            <param name="another">stream to copy</param>
+        </member>
+        <member name="M:Revenj.Utility.ChunkedMemoryStream.#ctor(System.IO.Stream,System.Boolean,System.Boolean)">
+            <summary>
+            Create in memory stream based on another stream.
+            Specify whether should provided stream be disposed after copying.
+            </summary>
+            <param name="another">stream to copy</param>
+            <param name="dispose">dispose provided stream</param>
+            <param name="reset">reset provided stream to original position</param>
+        </member>
+        <member name="M:Revenj.Utility.ChunkedMemoryStream.Flush">
+            <summary>
+            Flush stream. Does nothing.
+            </summary>
+        </member>
+        <member name="M:Revenj.Utility.ChunkedMemoryStream.ReadByte">
+            <summary>
+            Read a single byte
+            </summary>
+            <returns>byte value or -1 for end</returns>
+        </member>
+        <member name="M:Revenj.Utility.ChunkedMemoryStream.Read(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Read buffer from the stream. 
+            Can return less then specified count if remaining block size is less than specified count
+            </summary>
+            <param name="buffer">copy to buffer</param>
+            <param name="offset">offset in the buffer</param>
+            <param name="count">maximum size to read</param>
+            <returns>length of bytes read</returns>
+        </member>
+        <member name="M:Revenj.Utility.ChunkedMemoryStream.Seek(System.Int64,System.IO.SeekOrigin)">
+            <summary>
+            Seek to position in the stream.
+            </summary>
+            <param name="offset">offset at stream</param>
+            <param name="origin">position type</param>
+            <returns>current position</returns>
+        </member>
+        <member name="M:Revenj.Utility.ChunkedMemoryStream.SetLength(System.Int64)">
+            <summary>
+            Set new length of the stream.
+            Adjusts the current position if new length is larger then it.
+            </summary>
+            <param name="value">new length</param>
+        </member>
+        <member name="M:Revenj.Utility.ChunkedMemoryStream.IsNull">
+            <summary>
+            Check if stream is of length 4 with bytes = NULL.
+            </summary>
+            <returns>is stream content { 'N','U','L','L' }</returns>
+        </member>
+        <member name="M:Revenj.Utility.ChunkedMemoryStream.WriteByte(System.Byte)">
+            <summary>
+            Write byte to stream.
+            Advances current position by one.
+            Adds a new block if necessary.
+            </summary>
+            <param name="value">byte to write</param>
+        </member>
+        <member name="M:Revenj.Utility.ChunkedMemoryStream.Write(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Write buffer to stream.
+            Advances current position by count.
+            Increases length if necessary.
+            New blocks will be added as required.
+            It's best to use buffer of size 8192
+            </summary>
+            <param name="buffer">provided bytes</param>
+            <param name="offset">offset in bytes</param>
+            <param name="count">total length</param>
+        </member>
+        <member name="M:Revenj.Utility.ChunkedMemoryStream.Equals(System.IO.Stream)">
+            <summary>
+            Compare two streams. 
+            Length and content will be compared.
+            </summary>
+            <param name="another">stream to compare</param>
+            <returns>are streams equal</returns>
+        </member>
+        <member name="M:Revenj.Utility.ChunkedMemoryStream.ToBase64Stream">
+            <summary>
+            Convert stream to Base 64 String representation in stream.
+            </summary>
+            <returns>created stream</returns>
+        </member>
+        <member name="M:Revenj.Utility.ChunkedMemoryStream.ToBase64Writer(System.IO.TextWriter)">
+            <summary>
+            Convert stream to Base 64 String representation in the provided writer.
+            </summary>
+        </member>
+        <member name="M:Revenj.Utility.ChunkedMemoryStream.ToPostgresBytea(System.IO.TextWriter)">
+            <summary>
+            Convert stream to Postgres representation of bytea
+            </summary>
+            <param name="sw"></param>
+        </member>
+        <member name="M:Revenj.Utility.ChunkedMemoryStream.CopyTo(System.IO.Stream)">
+            <summary>
+            Optimized version of copy to stream
+            </summary>
+            <param name="stream">destination stream</param>
+        </member>
+        <member name="M:Revenj.Utility.ChunkedMemoryStream.GetWriter">
+            <summary>
+            Reuse same text writer on this stream.
+            </summary>
+            <returns>stream writer</returns>
+        </member>
+        <member name="M:Revenj.Utility.ChunkedMemoryStream.GetReader">
+            <summary>
+            Reuse same text reader on this stream.
+            </summary>
+            <returns>stream reader</returns>
+        </member>
+        <member name="P:Revenj.Utility.ChunkedMemoryStream.CanRead">
+            <summary>
+            Can this stream be read? Always true
+            </summary>
+        </member>
+        <member name="P:Revenj.Utility.ChunkedMemoryStream.CanSeek">
+            <summary>
+            Can this stream be sought? Always true
+            </summary>
+        </member>
+        <member name="P:Revenj.Utility.ChunkedMemoryStream.CanWrite">
+            <summary>
+            Can this stream be written to? Always true
+            </summary>
+        </member>
+        <member name="P:Revenj.Utility.ChunkedMemoryStream.Length">
+            <summary>
+            Get the length of the stream.
+            </summary>
+        </member>
+        <member name="P:Revenj.Utility.ChunkedMemoryStream.Position">
+            <summary>
+            Current position in the stream.
+            </summary>
+        </member>
+        <member name="T:Revenj.Utility.AssemblyScanner">
+            <summary>
+            Utility for scanning assemblies in current AppDomain.
+            Microsoft specific assemblies will be skipped.
+            </summary>
+        </member>
+        <member name="M:Revenj.Utility.AssemblyScanner.GetAssemblies">
+            <summary>
+            Get assemblies from current AppDomain.
+            Don't return dynamic or Microsoft specific assemblies.
+            </summary>
+            <returns>found assemblies</returns>
+        </member>
+        <member name="M:Revenj.Utility.AssemblyScanner.GetAllTypes">
+            <summary>
+            Get all types from assemblies.
+            Types will be cached after first call.
+            </summary>
+            <returns>Types in assemblies</returns>
+        </member>
+        <member name="T:Revenj.Utility.ExpandoHelper">
+            <summary>
+            Utilities for expando object.
+            </summary>
+        </member>
+        <member name="M:Revenj.Utility.ExpandoHelper.With(System.Dynamic.ExpandoObject,System.Action{System.Object})">
+            <summary>
+            Use dynamic syntax with ExpandoObject.
+            </summary>
+            <param name="eo">expando object</param>
+            <param name="initialize">apply actions</param>
+            <returns>self</returns>
+        </member>
+        <member name="M:Revenj.Utility.ExpandoHelper.AsExpando(System.Object)">
+            <summary>
+            Convert object to expando object.
+            Copy properties from object using reflection.
+            </summary>
+            <param name="item">source instance</param>
+            <returns>expando clone</returns>
+        </member>
+        <member name="T:Revenj.Utility.DynamicOrderBy">
+            <summary>
+            Utility class for conversion from dynamic order to static order.
+            </summary>
+        </member>
+        <member name="M:Revenj.Utility.DynamicOrderBy.OrderBy``1(System.Linq.IQueryable{``0},System.Collections.Generic.IDictionary{System.String,System.Boolean})">
+            <summary>
+            Order by provided properties using specified direction.
+            Properties (or paths) are specified as string.
+            </summary>
+            <typeparam name="T">collection type</typeparam>
+            <param name="collection">collection projection</param>
+            <param name="orderBy">order configuration</param>
+            <returns>sorted projection</returns>
+        </member>
+        <member name="M:Revenj.Utility.StableHashCode.HashString(System.String)">
+            <summary>
+            Provide uniquish hash code for string value.
+            TODO: convert to proven hash algorithm
+            </summary>
+            <param name="text"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Revenj.Utility.Sorting">
+            <summary>
+            Sorting algorithms
+            </summary>
+        </member>
+        <member name="M:Revenj.Utility.Sorting.TopologicalSort``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{``0,``0}})">
+            <summary>
+            Topological ordering of directed graph.
+            </summary>
+            <typeparam name="T">Node type</typeparam>
+            <param name="nodes">Graph nodes</param>
+            <param name="dependencies">Node dependencies</param>
+            <returns>Sorted nodes</returns>
+        </member>
+    </members>
+</doc>

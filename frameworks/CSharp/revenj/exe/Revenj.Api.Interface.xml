@@ -1,0 +1,210 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Revenj.Api.Interface</name>
+    </assembly>
+    <members>
+        <member name="T:Revenj.Api.ICommandConverter">
+            <summary>
+            Service for passing REST-like commands to server commands.
+            Return stream to external request.
+            </summary>
+        </member>
+        <member name="M:Revenj.Api.ICommandConverter.PassThrough``2(``1,System.String,Revenj.Api.AdditionalCommand[])">
+            <summary>
+            Pass request to the server command.
+            Request is casted instead of deserialized.
+            </summary>
+            <typeparam name="TCommand">server command type</typeparam>
+            <typeparam name="TArgument">server command argument</typeparam>
+            <param name="argument">argument value</param>
+            <param name="accept">expected result from Accept mime type</param>
+            <param name="additionalCommands">run additional commands and save result to header</param>
+            <returns>result converted to requested mime type</returns>
+        </member>
+        <member name="M:Revenj.Api.ICommandConverter.ConvertStream``2(``1)">
+            <summary>
+            Call IRestApplication Get/Post with serialized argument
+            </summary>
+            <typeparam name="TCommand">server command type</typeparam>
+            <typeparam name="TArgument">server command argument</typeparam>
+            <param name="argument">argument value</param>
+            <returns>result converted to requested mime type</returns>
+        </member>
+        <member name="T:Revenj.Api.AdditionalCommand">
+            <summary>
+            Run multiple commands and add response to specified header
+            </summary>
+        </member>
+        <member name="P:Revenj.Api.AdditionalCommand.Argument">
+            <summary>
+            Argument for specified command
+            </summary>
+        </member>
+        <member name="P:Revenj.Api.AdditionalCommand.CommandType">
+            <summary>
+            Command type
+            </summary>
+        </member>
+        <member name="P:Revenj.Api.AdditionalCommand.ToHeader">
+            <summary>
+            Header where to save result
+            </summary>
+        </member>
+        <member name="T:Revenj.Api.CommandConverterHelper">
+            <summary>
+            Utility for command converter
+            </summary>
+        </member>
+        <member name="M:Revenj.Api.CommandConverterHelper.PassThrough``2(Revenj.Api.ICommandConverter,``1)">
+            <summary>
+            Pass request to the server command.
+            Request is casted instead of deserialized.
+            Result type is defined with Accept header
+            If Accept header is not defined, XML will be used
+            </summary>
+            <typeparam name="TCommand">server command type</typeparam>
+            <typeparam name="TArgument">server command argument</typeparam>
+            <param name="converter">command converter</param>
+            <param name="argument">argument value</param>
+            <returns>result converted to requested mime type</returns>
+        </member>
+        <member name="T:Revenj.Api.SoapResultDescription">
+            <summary>
+            Collection of SOAP command results.
+            </summary>
+        </member>
+        <member name="M:Revenj.Api.SoapResultDescription.Create(System.String,Revenj.Api.SoapCommandResultDescription[])">
+            <summary>
+            Create SOAP result.
+            </summary>
+            <param name="message">global response message</param>
+            <param name="executedCommands">executed command results</param>
+            <returns>created result</returns>
+        </member>
+        <member name="P:Revenj.Api.SoapResultDescription.Message">
+            <summary>
+            Global response message.
+            </summary>
+        </member>
+        <member name="P:Revenj.Api.SoapResultDescription.ExecutedCommands">
+            <summary>
+            Results from executed commands.
+            </summary>
+        </member>
+        <member name="T:Revenj.Api.SoapCommandResultDescription">
+            <summary>
+            Response for SOAP command from SOAP command description.
+            </summary>
+        </member>
+        <member name="M:Revenj.Api.SoapCommandResultDescription.Create(System.String,System.Net.HttpStatusCode,System.String,System.String)">
+            <summary>
+            Create SOAP command result.
+            </summary>
+            <param name="responseID">paired with request id</param>
+            <param name="status">execution status</param>
+            <param name="message">result message</param>
+            <param name="data">serialized result</param>
+            <returns>created command result</returns>
+        </member>
+        <member name="P:Revenj.Api.SoapCommandResultDescription.ResponseID">
+            <summary>
+            Request id saved to response
+            </summary>
+        </member>
+        <member name="P:Revenj.Api.SoapCommandResultDescription.Status">
+            <summary>
+            Command execution status.
+            </summary>
+        </member>
+        <member name="P:Revenj.Api.SoapCommandResultDescription.Message">
+            <summary>
+            Server command message.
+            </summary>
+        </member>
+        <member name="P:Revenj.Api.SoapCommandResultDescription.Data">
+            <summary>
+            XML result serialized as string
+            </summary>
+        </member>
+        <member name="T:Revenj.Api.IRestApplication">
+            <summary>
+            Generic RPC-like API.
+            Server command is loaded from uri argument.
+            Result stream will be serialized with requested serialization.
+            Request is executed inside a single transaction.
+            </summary>
+        </member>
+        <member name="M:Revenj.Api.IRestApplication.Get">
+            <summary>
+            Call server command without argument.
+            </summary>
+            <returns>serialized response</returns>
+        </member>
+        <member name="M:Revenj.Api.IRestApplication.Post(System.IO.Stream)">
+            <summary>
+            Call server command with provided argument.
+            Argument is deserialized using specified serialization.
+            </summary>
+            <param name="argument">serialized request argument</param>
+            <returns>serialized response</returns>
+        </member>
+        <member name="T:Revenj.Api.ISoapApplication">
+            <summary>
+            Generic SOAP API service.
+            Allows for multiple commands at once.
+            All commands are executed inside a single transaciton.
+            SOAP uses XML serialization.
+            </summary>
+        </member>
+        <member name="M:Revenj.Api.ISoapApplication.Execute(Revenj.Api.SoapCommandDescription[])">
+            <summary>
+            Execute requested commands defined by description.
+            </summary>
+            <param name="soapCommands">comand description</param>
+            <returns>executed results</returns>
+        </member>
+        <member name="T:Revenj.Api.SoapApplicationHelper">
+            <summary>
+            Utility for SOAP API
+            </summary>
+        </member>
+        <member name="M:Revenj.Api.SoapApplicationHelper.Execute(Revenj.Api.ISoapApplication,Revenj.Api.SoapCommandDescription[])">
+            <summary>
+            Execute requested command(s) defined by description(s).
+            </summary>
+            <param name="app">soap application service</param>
+            <param name="commands">comand descriptions</param>
+            <returns>executed results</returns>
+        </member>
+        <member name="T:Revenj.Api.SoapCommandDescription">
+            <summary>
+            SOAP command description.
+            </summary>
+        </member>
+        <member name="M:Revenj.Api.SoapCommandDescription.Create(System.String,System.String,System.String)">
+            <summary>
+            Create SOAP command description.
+            </summary>
+            <param name="requestID">request identifier</param>
+            <param name="commandName">server command</param>
+            <param name="data">XML as string</param>
+            <returns>command description</returns>
+        </member>
+        <member name="P:Revenj.Api.SoapCommandDescription.RequestID">
+            <summary>
+            Request identifier. Result is paired with request id.
+            </summary>
+        </member>
+        <member name="P:Revenj.Api.SoapCommandDescription.CommandName">
+            <summary>
+            Server command name. Command will be looked up from provided name.
+            </summary>
+        </member>
+        <member name="P:Revenj.Api.SoapCommandDescription.Data">
+            <summary>
+            Server command argument serialized as XML.
+            </summary>
+        </member>
+    </members>
+</doc>

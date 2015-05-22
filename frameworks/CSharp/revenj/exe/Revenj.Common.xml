@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Revenj.Common</name>
+    </assembly>
+    <members>
+        <member name="T:Revenj.Common.FrameworkException">
+            <summary>
+            Generic framework exception.
+            For internal errors:
+            * incorrect plugin configuration
+            * framework asserts
+            ...
+            </summary>
+        </member>
+        <member name="M:Revenj.Common.FrameworkException.#ctor">
+            <summary>
+            Please provide meaningful message for exception.
+            </summary>
+        </member>
+        <member name="M:Revenj.Common.FrameworkException.#ctor(System.String)">
+            <summary>
+            Error with small meaningful description.
+            </summary>
+            <param name="message">description</param>
+        </member>
+        <member name="M:Revenj.Common.FrameworkException.#ctor(System.String,System.Exception)">
+            <summary>
+            Bubble up exception with additional description.
+            </summary>
+            <param name="message">description</param>
+            <param name="inner">exception that caused this error</param>
+        </member>
+        <member name="T:Revenj.CollectionExtensions">
+            <summary>
+            Helper methods for working with collections
+            </summary>
+        </member>
+        <member name="M:Revenj.CollectionExtensions.UnionAll``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Add UnionAll so it is visible in Intellisense since often Concat
+            should be used instead of Union.
+            Union will remove duplicate elements, while UnionAll will not.
+            </summary>
+            <typeparam name="T">collection type</typeparam>
+            <param name="first">starting collection</param>
+            <param name="second">collection to be appended</param>
+            <returns>concatenated collection</returns>
+        </member>
+        <member name="M:Revenj.CollectionExtensions.ToSet``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Create HashSet from source collection. Common missing LINQ method
+            </summary>
+            <typeparam name="T">collection type</typeparam>
+            <param name="collection">source collection</param>
+            <returns>collection as set</returns>
+        </member>
+        <member name="T:Revenj.StringExtensions">
+            <summary>
+            Helper methods for working with strings.
+            Instead of string.Format("....", ...) write "....".With(...)
+            </summary>
+        </member>
+        <member name="M:Revenj.StringExtensions.With(System.String,System.Object)">
+            <summary>
+            Single argument helper method.
+            "print {0} now".With(arg)
+            </summary>
+            <param name="value">template string</param>
+            <param name="arg">formatting argument</param>
+            <returns>formatted string</returns>
+        </member>
+        <member name="M:Revenj.StringExtensions.With(System.String,System.Object,System.Object)">
+            <summary>
+            Double argument helper method.
+            "print {0} {1}".With(arg1, arg2)
+            </summary>
+            <param name="value">template string</param>
+            <param name="arg1">first formatting argument</param>
+            <param name="arg2">second formatting argument</param>
+            <returns>formatted string</returns>
+        </member>
+        <member name="M:Revenj.StringExtensions.With(System.String,System.Object,System.Object,System.Object)">
+            <summary>
+            Triple argument helper method.
+            "print {0}, {1} and {2}".With(arg1, arg2, arg3)
+            </summary>
+            <param name="value">template string</param>
+            <param name="arg1">first formatting argument</param>
+            <param name="arg2">second formatting argument</param>
+            <param name="arg3">third formatting argument</param>
+            <returns>formatted string</returns>
+        </member>
+        <member name="M:Revenj.StringExtensions.With(System.String,System.Object[])">
+            <summary>
+            Generic helper method. For unlimited number of arguments
+            "print {0} ... {n}".With(arg1, ... argN)
+            </summary>
+            <param name="value">template string</param>
+            <param name="args">formatting arguments</param>
+            <returns>formatted string</returns>
+        </member>
+    </members>
+</doc>

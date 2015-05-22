@@ -1,0 +1,1094 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Revenj.DomainPatterns.Interface</name>
+    </assembly>
+    <members>
+        <member name="T:Revenj.DomainPatterns.IObjectHistory">
+            <summary>
+            Domain object which provides access to it's history
+            </summary>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IIdentifiable">
+            <summary>
+            Domain objects with URI property.
+            URI is string representation of it's unique identity.
+            </summary>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IDataSource">
+            <summary>
+            Queryable domain object signature
+            </summary>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IHistory`1">
+            <summary>
+            Collection of aggregate root snapshots.
+            When aggregate root history is enabled, on each persist, 
+            snapshot will be saved too.
+            </summary>
+            <typeparam name="TRoot"></typeparam>
+        </member>
+        <member name="P:Revenj.DomainPatterns.IHistory`1.Snapshots">
+            <summary>
+            Collection of snapshots for this aggregate root
+            </summary>
+        </member>
+        <member name="T:Revenj.DomainPatterns.ISnapshot`1">
+            <summary>
+            Point in time version of an aggregate root.
+            </summary>
+            <typeparam name="TRoot">aggregate root type</typeparam>
+        </member>
+        <member name="T:Revenj.DomainPatterns.INestedValue`1">
+            <summary>
+            Common type for nested values.
+            </summary>
+            <typeparam name="TValue">value type</typeparam>
+        </member>
+        <member name="P:Revenj.DomainPatterns.INestedValue`1.Value">
+            <summary>
+            Get actual value
+            </summary>
+        </member>
+        <member name="P:Revenj.DomainPatterns.ISnapshot`1.At">
+            <summary>
+            When was this snapshot created
+            </summary>
+        </member>
+        <member name="P:Revenj.DomainPatterns.ISnapshot`1.Action">
+            <summary>
+            Type of action by which this snapshot was created
+            </summary>
+        </member>
+        <member name="T:Revenj.DomainPatterns.ISpecification`1">
+            <summary>
+            Specification is predicate which states a condition.
+            It can be used to filter data which satisfy defined condition.
+            </summary>
+            <typeparam name="TValue">specification type</typeparam>
+        </member>
+        <member name="P:Revenj.DomainPatterns.ISpecification`1.IsSatisfied">
+            <summary>
+            Expression for testing specified condition.
+            </summary>
+        </member>
+        <member name="T:Revenj.DomainPatterns.SpecificationHelper">
+            <summary>
+            Utility for applying specification on data.
+            </summary>
+        </member>
+        <member name="M:Revenj.DomainPatterns.SpecificationHelper.Filter``2(System.Linq.IQueryable{``0},Revenj.DomainPatterns.ISpecification{``1})">
+            <summary>
+            Apply specification on data projection.
+            Specification must be compatible with data.
+            </summary>
+            <typeparam name="TSource">data type</typeparam>
+            <typeparam name="TFilter">specification type</typeparam>
+            <param name="source">data projection</param>
+            <param name="filter">specification filter predicate</param>
+            <returns>filtered data projection</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.SpecificationHelper.IsSatisfiedBy``1(Revenj.DomainPatterns.ISpecification{``0},System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Check if any item satisfies specification.
+            </summary>
+            <typeparam name="TSource">data and specification type</typeparam>
+            <param name="specification">filter predicate</param>
+            <param name="items">data collection</param>
+            <returns>does any item satisfies specification</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.SpecificationHelper.IsSatisfiedBy``1(Revenj.DomainPatterns.ISpecification{``0},``0)">
+            <summary>
+            Is specification satisfied by provided object.
+            </summary>
+            <typeparam name="TSource">object and specification type</typeparam>
+            <param name="specification">condition</param>
+            <param name="item">object to check</param>
+            <returns>specification satisfied</returns>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IDataCache`1">
+            <summary>
+            Data cache service using uri lookup.
+            Identifiable object resolved from this service will be cached.
+            Invalidate uris on object change.
+            </summary>
+            <typeparam name="TValue">domain object type</typeparam>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IRepository`1">
+            <summary>
+            Data access abstraction. 
+            Lookup data by its identifier.
+            </summary>
+            <typeparam name="TValue">data type</typeparam>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IRepository`1.Find(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Find objects by provided identifiers
+            </summary>
+            <param name="uris">object identifiers</param>
+            <returns>found objects</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IDataCache`1.Invalidate(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Changed objects should be removed from cache.
+            </summary>
+            <param name="uris">changed uris</param>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IDataSourceCache`1">
+            <summary>
+            Entire data source cache service.
+            When entire class of objects is kept in memory, data source cache can be used.
+            </summary>
+            <typeparam name="TValue"></typeparam>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IQueryableRepository`1">
+            <summary>
+            Data access abstraction.
+            Query data using LINQ.
+            </summary>
+            <typeparam name="TValue">data type</typeparam>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IQueryableRepository`1.Query``1(Revenj.DomainPatterns.ISpecification{``0})">
+            <summary>
+            Query data using provided expression (optional).
+            If specification is provided it must be compatible with data type.
+            This is only a projection, actual query will be done after materialization from IQueryable&lt;TValue&gt;
+            </summary>
+            <typeparam name="TCondition">specification type</typeparam>
+            <param name="specification">filter predicate</param>
+            <returns>data projection</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IQueryableRepository`1.Search``1(Revenj.DomainPatterns.ISpecification{``0},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Search data using provided specification.
+            If specification is provided it must be compatible with data type.
+            </summary>
+            <typeparam name="TCondition">specification type</typeparam>
+            <param name="specification">filter predicate</param>
+            <param name="limit">limit maximum number of results</param>
+            <param name="offset">skip initial results</param>
+            <returns>found items</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IDataSourceCache`1.InvalidateAll">
+            <summary>
+            Invalidate entire cache.
+            </summary>
+        </member>
+        <member name="T:Revenj.DomainPatterns.ICacheable">
+            <summary>
+            Cacheable domain objects.
+            Dependencies can be tracked through relationship,
+            so invalidation can be detected.
+            </summary>
+        </member>
+        <member name="M:Revenj.DomainPatterns.ICacheable.GetRelationships">
+            <summary>
+            Get relationship for this domain object.
+            </summary>
+            <returns>collection of referenced types and uris</returns>
+        </member>
+        <member name="T:Revenj.DomainPatterns.CacheHelper">
+            <summary>
+            Cache utility
+            </summary>
+        </member>
+        <member name="M:Revenj.DomainPatterns.CacheHelper.Invalidate``1(Revenj.DomainPatterns.IDataCache{``0},System.String)">
+            <summary>
+            Invalidate single aggregate root.
+            </summary>
+            <typeparam name="TValue">aggregate root type</typeparam>
+            <param name="cache">cache service</param>
+            <param name="uri">uri to invalidate</param>
+        </member>
+        <member name="M:Revenj.DomainPatterns.CacheHelper.GetInvalidValues``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Build dependency collection information.
+            Collect invalid types and uris for provided domain objects.
+            </summary>
+            <typeparam name="TValue">domain object type</typeparam>
+            <param name="values">domain objects</param>
+            <returns>dependency collection information</returns>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IEntity">
+            <summary>
+            Entity domain object signature.
+            </summary>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IAggregateRoot">
+            <summary>
+            Aggregate root object signature.
+            Boundary for various entities and values which are persisted as a whole.
+            </summary>
+        </member>
+        <member name="T:Revenj.DomainPatterns.ISnowflake`1">
+            <summary>
+            Projection on an entity.
+            Snowflake schema which specialized use for some use case.
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+        </member>
+        <member name="M:Revenj.DomainPatterns.ISnowflake`1.Update(`0)">
+            <summary>
+            Update snowflake when entity is changed.
+            </summary>
+            <param name="entity">starting entity</param>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IServiceLocator">
+            <summary>
+            Service for resolving other services.
+            Unregistered services will be resolved too.
+            </summary>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IServiceLocator.Resolve(System.Type)">
+            <summary>
+            Resolve service registered as type using provided arguments.
+            Interfaces can be resolved only if registered into the container.
+            </summary>
+            <param name="type">service class/interface</param>
+            <param name="args">service class arguments</param>
+            <returns>resolved service</returns>
+        </member>
+        <member name="T:Revenj.DomainPatterns.ServiceLocatorHelper">
+            <summary>
+            Utility for service locator resolution
+            </summary>
+        </member>
+        <member name="M:Revenj.DomainPatterns.ServiceLocatorHelper.Resolve``1(Revenj.DomainPatterns.IServiceLocator)">
+            <summary>
+            Resolve service using provided type.
+            </summary>
+            <typeparam name="T">service type</typeparam>
+            <param name="locator">service locator</param>
+            <returns>resolved service</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.ServiceLocatorHelper.Resolve``1(Revenj.DomainPatterns.IServiceLocator,System.Type)">
+            <summary>
+            Resolve service using provided type and cast it to appropriate result.
+            </summary>
+            <typeparam name="T">result type</typeparam>
+            <param name="locator">service locator</param>
+            <param name="type">service type</param>
+            <returns>casted resolved service</returns>
+        </member>
+        <member name="T:Revenj.DomainPatterns.ISystemStartup">
+            <summary>
+            Service which will be called during system startup.
+            </summary>
+        </member>
+        <member name="M:Revenj.DomainPatterns.ISystemStartup.Configure(Revenj.DomainPatterns.IServiceLocator)">
+            <summary>
+            Configure system behavior.
+            </summary>
+            <param name="locator">dynamic locator</param>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IReport`1">
+            <summary>
+            Report service will gather data from its specification.
+            </summary>
+            <typeparam name="TData">result type</typeparam>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IReport`1.Populate(Revenj.DomainPatterns.IServiceLocator)">
+            <summary>
+            Create result object.
+            </summary>
+            <param name="locator">service locator</param>
+            <returns>populated result</returns>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IDocumentReport`1">
+            <summary>
+            Document report is a service for populating documents.
+            </summary>
+            <typeparam name="TData">population argument</typeparam>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IDocumentReport`1.Create(`0)">
+            <summary>
+            Create document from provided data
+            </summary>
+            <param name="data">used for document population</param>
+            <returns>populated document</returns>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IOlapCubeQuery">
+            <summary>
+            Service for running queries against OLAP cube.
+            Pick and choose interesting dimension and fact and run aggregation on them.
+            </summary>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IOlapCubeQuery.Analyze``1(System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Boolean}},Revenj.DomainPatterns.ISpecification{``0},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Run analysis on data. 
+            Data will be grouped by specified dimensions.
+            Aggregation will be run on specified facts.
+            Data will be returned in specified order.
+            Specification is used to filter only subset of data.
+            </summary>
+            <typeparam name="TSource">data source type</typeparam>
+            <param name="dimensions">dimension subset</param>
+            <param name="facts">fact subset</param>
+            <param name="order">custom order</param>
+            <param name="filter">predicate filter</param>
+            <returns>result from created query</returns>
+        </member>
+        <member name="P:Revenj.DomainPatterns.IOlapCubeQuery.Dimensions">
+            <summary>
+            Available dimensions
+            </summary>
+        </member>
+        <member name="P:Revenj.DomainPatterns.IOlapCubeQuery.Facts">
+            <summary>
+            Available facts
+            </summary>
+        </member>
+        <member name="T:Revenj.DomainPatterns.OlapCubeQueryHelper">
+            <summary>
+            Utility for easier use of OLAP cube
+            </summary>
+        </member>
+        <member name="M:Revenj.DomainPatterns.OlapCubeQueryHelper.Analyze(Revenj.DomainPatterns.IOlapCubeQuery,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Boolean}},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Run analysis an all data.
+            Data will be grouped by specified dimensions.
+            Aggregation will be run on specified facts.
+            Data will be returned in specified order.
+            </summary>
+            <param name="dimensions">dimension subset</param>
+            <param name="facts">fact subset</param>
+            <param name="order">custom order</param>
+            <returns>result from created query</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.OlapCubeQueryHelper.Builder(Revenj.DomainPatterns.IOlapCubeQuery)">
+            <summary>
+            Create OLAP cube builder with fluent API.
+            </summary>
+            <param name="query">OLAP cube</param>
+            <returns>builder</returns>
+        </member>
+        <member name="T:Revenj.DomainPatterns.OlapCubeQueryBuilder">
+            <summary>
+            Fluent interface for building OLAP query.
+            </summary>
+        </member>
+        <member name="M:Revenj.DomainPatterns.OlapCubeQueryBuilder.#ctor(Revenj.DomainPatterns.IOlapCubeQuery)">
+            <summary>
+            Original OLAP cube query.
+            </summary>
+            <param name="query">OLAP cube query</param>
+        </member>
+        <member name="M:Revenj.DomainPatterns.OlapCubeQueryBuilder.Use(System.String)">
+            <summary>
+            Use dimension or fact.
+            Group by dimension or aggregate by fact.
+            </summary>
+            <param name="dimensionOrFact">dimension or fact</param>
+            <returns>itself</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.OlapCubeQueryBuilder.Ascending(System.String)">
+            <summary>
+            Order result ascendingly using dimension or fact.
+            </summary>
+            <param name="result">sort column</param>
+            <returns>itself</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.OlapCubeQueryBuilder.Descending(System.String)">
+            <summary>
+            Order result descendingly using dimension or fact.
+            </summary>
+            <param name="result">sort column</param>
+            <returns>itself</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.OlapCubeQueryBuilder.Take(System.Int32)">
+            <summary>
+            Limit maximum results returned from analysis.
+            </summary>
+            <param name="limit">maximum results</param>
+            <returns>itself</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.OlapCubeQueryBuilder.Limit(System.Int32)">
+            <summary>
+            Limit maximum results returned from analysis.
+            </summary>
+            <param name="limit">maximum results</param>
+            <returns>itself</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.OlapCubeQueryBuilder.Skip(System.Int32)">
+            <summary>
+            Skip initial results returned from analysis.
+            </summary>
+            <param name="offset">skipped results</param>
+            <returns>itself</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.OlapCubeQueryBuilder.Offset(System.Int32)">
+            <summary>
+            Skip initial results returned from analysis.
+            </summary>
+            <param name="offset">skipped results</param>
+            <returns>itself</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.OlapCubeQueryBuilder.Analyze">
+            <summary>
+            Load query data by running analysis on all data.
+            </summary>
+            <returns>aggregated information</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.OlapCubeQueryBuilder.Analyze``1(Revenj.DomainPatterns.ISpecification{``0})">
+            <summary>
+            Load query data by running analysis on subset of data.
+            Specification predicate is used to filter data.
+            </summary>
+            <typeparam name="TFilter">specification type</typeparam>
+            <param name="specification">predicate filter</param>
+            <returns>aggregated information</returns>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IDomainModel">
+            <summary>
+            Access to domain model. 
+            Domain model can be dynamic, so access to them is available through this API.
+            </summary>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IDomainModel.Find(System.String)">
+            <summary>
+            Find domain object type by its name.
+            If domain object is not found, null will be returned.
+            </summary>
+            <param name="name">domain object name</param>
+            <returns>found domain object type</returns>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IValidation`1">
+            <summary>
+            Validation service. Validation checks which items don't pass
+            validation and provides an explanation why.
+            </summary>
+            <typeparam name="TEntity">domain object type</typeparam>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IValidation`1.FindInvalidItems(System.Linq.IQueryable{`0})">
+            <summary>
+            Apply filter on provided items and filter items which fail 
+            defined specifications.
+            </summary>
+            <param name="items">items to check</param>
+            <returns>invalid items</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IValidation`1.CanPersist(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Check if provided objects can be persisted.
+            Sometimes invalid objects are allowed to be persisted, but they are still considered invalid.
+            </summary>
+            <param name="items">items to check</param>
+            <returns>all items can be persisted</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IValidation`1.GetErrorDescription(`0)">
+            <summary>
+            Reason why does provided object fail validation.
+            </summary>
+            <param name="item">invalid object</param>
+            <returns>why is object invalid</returns>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IValidationResult">
+            <summary>
+            Validation result signature.
+            </summary>
+        </member>
+        <member name="P:Revenj.DomainPatterns.IValidationResult.ErrorDescription">
+            <summary>
+            Explanation why does current identity object fails validation.
+            </summary>
+        </member>
+        <member name="T:Revenj.DomainPatterns.ValidationHelper">
+            <summary>
+            Utility for validation service
+            </summary>
+        </member>
+        <member name="M:Revenj.DomainPatterns.ValidationHelper.GenerateDescription``1(Revenj.DomainPatterns.IValidation{``0},System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Aggregate errors for invalid items in a single message.
+            </summary>
+            <typeparam name="TEntity">domain object type</typeparam>
+            <param name="validation">validation service</param>
+            <param name="items">invalid items</param>
+            <returns>aggregated result message</returns>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IChangeTracking`1">
+            <summary>
+            Change tracking on an object.
+            When object implements change tracking it will maintain original 
+            version of an object at the time of reconstruction.
+            </summary>
+            <typeparam name="T">object type</typeparam>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IChangeTracking`1.GetOriginalValue">
+            <summary>
+            Get original value of a tracked object.
+            Original value is initial value after reconstruction.
+            </summary>
+            <returns>original value</returns>
+        </member>
+        <member name="P:Revenj.DomainPatterns.IChangeTracking`1.TrackChanges">
+            <summary>
+            Change tracking state for this instance
+            </summary>
+        </member>
+        <member name="T:Revenj.DomainPatterns.ChangeTrackingHelper">
+            <summary>
+            Utility for change tracking
+            </summary>
+        </member>
+        <member name="M:Revenj.DomainPatterns.ChangeTrackingHelper.IsChanged``1(Revenj.DomainPatterns.IChangeTracking{``0})">
+            <summary>
+            Is state of the object changed.
+            </summary>
+            <typeparam name="T">object type</typeparam>
+            <param name="tracking">object which implements change tracking</param>
+            <returns>is object changed</returns>
+        </member>
+        <member name="T:Revenj.DomainPatterns.NotifyInfo">
+            <summary>
+            Notification information.
+            </summary>
+        </member>
+        <member name="F:Revenj.DomainPatterns.NotifyInfo.Name">
+            <summary>
+            Domain object name
+            </summary>
+        </member>
+        <member name="F:Revenj.DomainPatterns.NotifyInfo.Operation">
+            <summary>
+            Type of operation
+            </summary>
+        </member>
+        <member name="F:Revenj.DomainPatterns.NotifyInfo.URI">
+            <summary>
+            Object identifiers
+            </summary>
+        </member>
+        <member name="M:Revenj.DomainPatterns.NotifyInfo.#ctor(System.String,Revenj.DomainPatterns.NotifyInfo.OperationEnum,System.String[])">
+            <summary>
+            Create notification information
+            </summary>
+            <param name="name">domain object name</param>
+            <param name="operation">operation type</param>
+            <param name="uri">identifiers</param>
+        </member>
+        <member name="T:Revenj.DomainPatterns.NotifyInfo.OperationEnum">
+            <summary>
+            Operation types
+            </summary>
+        </member>
+        <member name="F:Revenj.DomainPatterns.NotifyInfo.OperationEnum.Insert">
+            <summary>
+            Aggregate root or event insert
+            </summary>
+        </member>
+        <member name="F:Revenj.DomainPatterns.NotifyInfo.OperationEnum.Update">
+            <summary>
+            Aggregate root was changed, but URI remained the same
+            </summary>
+        </member>
+        <member name="F:Revenj.DomainPatterns.NotifyInfo.OperationEnum.Change">
+            <summary>
+            Aggregate root was changed and URI is changed also
+            </summary>
+        </member>
+        <member name="F:Revenj.DomainPatterns.NotifyInfo.OperationEnum.Delete">
+            <summary>
+            Aggregate root was deleted
+            </summary>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IDataChangeNotification">
+            <summary>
+            Change notification service.
+            When aggregate root are persisted or events are submitted,
+            notification will be available through this service.
+            </summary>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IDataChangeNotification.Track``1">
+            <summary>
+            Specify interest in only subset of notifications.
+            </summary>
+            <typeparam name="T">domain object type</typeparam>
+            <returns>pair of domain object identifiers, with lazily reified instance</returns>
+        </member>
+        <member name="P:Revenj.DomainPatterns.IDataChangeNotification.Notifications">
+            <summary>
+            Observe notifications
+            </summary>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IPersistableRepository`1">
+            <summary>
+            Aggregate root persistable repository.
+            Besides querying capabilities, repository has set based API for persistence.
+            </summary>
+            <typeparam name="TRoot">aggregate root type</typeparam>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IPersistableRepository`1.Persist(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`0}},System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Persist aggregate roots. Bulk persistence.
+            Inserted aggregates will return new identifiers.
+            Aggregate roots will be modified in place.
+            For update aggregates, if old aggregate is not provided, it will be looked up using aggregate identifier.
+            </summary>
+            <param name="insert">new aggregates</param>
+            <param name="update">collection of old and changed aggregates</param>
+            <param name="delete">remove aggregates</param>
+            <returns>created identifiers</returns>
+        </member>
+        <member name="T:Revenj.DomainPatterns.RepositoryHelper">
+            <summary>
+            Utility for easier usage of repositories.
+            </summary>
+        </member>
+        <member name="M:Revenj.DomainPatterns.RepositoryHelper.Persist``1(Revenj.DomainPatterns.IPersistableRepository{``0},System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Persist aggregate roots. Bulk persistence.
+            Inserted aggregates will return new identifiers.
+            Aggregate roots will be modified in place.
+            For update aggregates, old aggregates will be loaded from change tracking or looked up using aggregate identifier.
+            </summary>
+            <typeparam name="TRoot">aggregate root type</typeparam>
+            <param name="repository">persistable repository</param>
+            <param name="insert">new aggregates</param>
+            <param name="update">collection of changed aggregates</param>
+            <param name="delete">remove aggregates</param>
+            <returns>created identifiers</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.RepositoryHelper.Query``1(Revenj.DomainPatterns.IQueryableRepository{``0})">
+            <summary>
+            Query all data of specific type.
+            This is only a projection, actual query will be done after materialization from IQueryable&lt;TValue&gt;
+            </summary>
+            <typeparam name="TValue">data type</typeparam>
+            <param name="repository">queryable repository</param>
+            <returns>projection to data</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.RepositoryHelper.Search``1(Revenj.DomainPatterns.IQueryableRepository{``0})">
+            <summary>
+            Search all data of specified type.
+            </summary>
+            <typeparam name="TValue">data type</typeparam>
+            <param name="repository">queryable repository</param>
+            <returns>found items</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.RepositoryHelper.Find``1(Revenj.DomainPatterns.IRepository{``0},System.String)">
+            <summary>
+            Find objects by provided identifier
+            </summary>
+            <typeparam name="TValue">object type</typeparam>
+            <param name="repository">repository to data</param>
+            <param name="uri">object identifier</param>
+            <returns>found object</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.RepositoryHelper.Insert``1(Revenj.DomainPatterns.IPersistableRepository{``0},System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Insert new aggregate roots.
+            Aggregates are modified in place.
+            </summary>
+            <typeparam name="TRoot">aggregate type</typeparam>
+            <param name="repository">persistable repository</param>
+            <param name="data">new aggregates</param>
+            <returns>created identifiers</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.RepositoryHelper.Update``1(Revenj.DomainPatterns.IPersistableRepository{``0},System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Save changed aggregate roots.
+            Aggregates are modified in place.
+            </summary>
+            <typeparam name="TRoot">aggregate type</typeparam>
+            <param name="repository">persistable repository</param>
+            <param name="data">aggregates to save</param>
+        </member>
+        <member name="M:Revenj.DomainPatterns.RepositoryHelper.Update``1(Revenj.DomainPatterns.IPersistableRepository{``0},System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{``0,``0}})">
+            <summary>
+            Save changed aggregate roots.
+            Aggregates are modified in place.
+            </summary>
+            <typeparam name="TRoot">aggregate type</typeparam>
+            <param name="repository">persistable repository</param>
+            <param name="data">collection of old and changed aggregates</param>
+        </member>
+        <member name="M:Revenj.DomainPatterns.RepositoryHelper.Delete``1(Revenj.DomainPatterns.IPersistableRepository{``0},System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Delete aggregate roots.
+            </summary>
+            <typeparam name="TRoot">aggregate type</typeparam>
+            <param name="repository">persistable repository</param>
+            <param name="data">aggregates to delete</param>
+        </member>
+        <member name="M:Revenj.DomainPatterns.RepositoryHelper.Insert``1(Revenj.DomainPatterns.IPersistableRepository{``0},``0)">
+            <summary>
+            Insert aggregate root.
+            Return new identifier.
+            Aggregate is modified in place.
+            </summary>
+            <typeparam name="TRoot">aggregate type</typeparam>
+            <param name="repository">persistable repository</param>
+            <param name="data">new aggregate</param>
+            <returns>assigned identifier</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.RepositoryHelper.Update``1(Revenj.DomainPatterns.IPersistableRepository{``0},``0)">
+            <summary>
+            Update changed aggregate root.
+            Aggregate is modified in place.
+            </summary>
+            <typeparam name="TRoot">aggregate type</typeparam>
+            <param name="repository">persistable repository</param>
+            <param name="data">changed aggregate</param>
+        </member>
+        <member name="M:Revenj.DomainPatterns.RepositoryHelper.Update``1(Revenj.DomainPatterns.IPersistableRepository{``0},``0,``0)">
+            <summary>
+            Update changed aggregate root.
+            Aggregate is modified in place.
+            </summary>
+            <typeparam name="TRoot">aggregate type</typeparam>
+            <param name="repository">persistable repository</param>
+            <param name="oldValue">old aggregate instance</param>
+            <param name="newValue">new aggregate instance</param>
+        </member>
+        <member name="M:Revenj.DomainPatterns.RepositoryHelper.Delete``1(Revenj.DomainPatterns.IPersistableRepository{``0},``0)">
+            <summary>
+            Delete aggregate root.
+            </summary>
+            <typeparam name="TRoot">aggregate type</typeparam>
+            <param name="repository">persistable repository</param>
+            <param name="data">aggregate to delete</param>
+        </member>
+        <member name="M:Revenj.DomainPatterns.RepositoryHelper.Delete``1(Revenj.DomainPatterns.IPersistableRepository{``0},System.String)">
+            <summary>
+            Delete aggregate root defined by provided identifier.
+            Deleted aggregate is returned.
+            </summary>
+            <typeparam name="TRoot">aggregate type</typeparam>
+            <param name="repository">persistable repository</param>
+            <param name="uri">aggregate identifier</param>
+            <returns>deleted aggregate root</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.RepositoryHelper.Update``1(Revenj.DomainPatterns.IPersistableRepository{``0},System.String,System.Action{``0})">
+            <summary>
+            Change aggregate root defined by identifier using provided action.
+            </summary>
+            <typeparam name="TRoot">aggregate type</typeparam>
+            <param name="repository">persistable repository</param>
+            <param name="uri">aggregate identifier</param>
+            <param name="update">change method</param>
+            <returns>found and changed aggregate</returns>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IDomainEvent">
+            <summary>
+            Server domain event signature.
+            Domain event is meaningful business event which has happened and was logged.
+            </summary>
+        </member>
+        <member name="P:Revenj.DomainPatterns.IDomainEvent.QueuedAt">
+            <summary>
+            Queue time
+            </summary>
+        </member>
+        <member name="P:Revenj.DomainPatterns.IDomainEvent.ProcessedAt">
+            <summary>
+            When domain event was processed
+            </summary>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IDomainEvent`1">
+            <summary>
+            Domain event which is bound to an aggregate.
+            Async events will be replayed on the aggregate during aggregate reconstruction.
+            </summary>
+            <typeparam name="TAggregate">aggregate root type</typeparam>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IDomainEvent`1.Apply(`0)">
+            <summary>
+            Apply domain event on an aggregate root
+            </summary>
+            <param name="aggregate">aggregate root instance</param>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IDomainEventSource`1">
+            <summary>
+            Domain event-sourcing. 
+            Processed domain events will be raised and available through the observable Events property.
+            </summary>
+            <typeparam name="TEvent">domain event type</typeparam>
+        </member>
+        <member name="P:Revenj.DomainPatterns.IDomainEventSource`1.Events">
+            <summary>
+            Processed domain events
+            </summary>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IDomainEventSource">
+            <summary>
+            Domain event-sourcing.
+            Processed domain events will be raised and available for registered event types.
+            </summary>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IDomainEventSource.Track``1">
+            <summary>
+            Register for specific domain events.
+            </summary>
+            <typeparam name="TEvent">domain event type</typeparam>
+            <returns>observable to processed domain events</returns>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IDomainEventStore`1">
+            <summary>
+            Domain event store.
+            Events can only be submitted. Submitted events can't be changed.
+            Async events can be marked as processed at a later time.
+            </summary>
+            <typeparam name="TEvent">domain event type</typeparam>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IDomainEventStore`1.Submit(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Submit domain events to the store.
+            After submission event will get an unique identifier.
+            </summary>
+            <param name="events">domain events</param>
+            <returns>event identifiers</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IDomainEventStore`1.Mark(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Mark unprocessed events as processed.
+            </summary>
+            <param name="uris">event identifiers</param>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IDomainEventStore`1.GetQueue">
+            <summary>
+            Get unprocessed events.
+            </summary>
+            <returns>unprocessed events</returns>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IDomainEventStore">
+            <summary>
+            Domain event store.
+            Events can only be submitted. Submitted events can't be changed.
+            Async events can be marked as processed at a latter time.
+            </summary>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IDomainEventStore.Submit``1(``0)">
+            <summary>
+            Submit domain event to the store.
+            After submission event will get an unique identifier
+            </summary>
+            <typeparam name="TEvent">domain event type</typeparam>
+            <param name="domainEvent">domain event</param>
+            <returns>event identifier</returns>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IDomainEventHandler`1">
+            <summary>
+            Handle domain event.
+            When domain event is processed by the server, all domain event handlers are invoked to
+            process it. If one domain event handler throws an exception, entire submission is canceled.
+            If Event[] is used, collection of events can be processed at once.
+            </summary>
+            <typeparam name="TEvent">domain event type</typeparam>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IDomainEventHandler`1.Handle(`0)">
+            <summary>
+            Handle domain event submission.
+            </summary>
+            <param name="input">processing domain event(s)</param>
+        </member>
+        <member name="T:Revenj.DomainPatterns.DomainEventHelper">
+            <summary>
+            Utility for domain events
+            </summary>
+        </member>
+        <member name="M:Revenj.DomainPatterns.DomainEventHelper.Submit``1(Revenj.DomainPatterns.IDomainEventStore{``0},``0)">
+            <summary>
+            Submit single domain event to the store.
+            Redirects call to the collection API.
+            </summary>
+            <typeparam name="TEvent">domain event type</typeparam>
+            <param name="store">domain event store</param>
+            <param name="domainEvent">raise domain event</param>
+            <returns>event identifier</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.DomainEventHelper.Mark``1(Revenj.DomainPatterns.IDomainEventStore{``0},``0)">
+            <summary>
+            Mark single domain event as processed.
+            Redirects call to the collection API.
+            </summary>
+            <typeparam name="TEvent">domain event type</typeparam>
+            <param name="store">domain event store</param>
+            <param name="domainEvent">mark domain event as processed</param>
+        </member>
+        <member name="T:Revenj.DomainPatterns.IDataContext">
+            <summary>
+            Access to data. Proxy to various features, such as 
+            repositories, reports, notifications, OLAP, validation...
+            Cache will be used if available.
+            Data is available using current scope.
+            If transaction is used, changes will be visible to other scopes only after commit.
+            </summary>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IDataContext.Find``1(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Find identifiable data from provided URIs
+            </summary>
+            <typeparam name="T">data type</typeparam>
+            <param name="uris">identification</param>
+            <returns>found values</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IDataContext.Query``1">
+            <summary>
+            LINQ queries to data
+            </summary>
+            <typeparam name="T">data type</typeparam>
+            <returns>LINQ projection</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IDataContext.Create``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Create new aggregate roots. 
+            Data will be sent immediately to the backing store.
+            </summary>
+            <typeparam name="T">aggregate type</typeparam>
+            <param name="aggregates">new aggregates</param>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IDataContext.Update``1(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{``0,``0}})">
+            <summary>
+            Update existing aggregate roots. Provide pair of old and new.
+            Old value is optional. Change track value will be used on null values.
+            Lookup to DB will be performed if neither old value or change track value is available.
+            Data will be sent immediately to the backing store.
+            </summary>
+            <typeparam name="T">aggregate type</typeparam>
+            <param name="pairs">aggregate pairs</param>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IDataContext.Delete``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Delete existing aggregate roots.
+            Data will be sent immediately to the backing store.
+            </summary>
+            <typeparam name="T">aggregate type</typeparam>
+            <param name="aggregates">remove provided aggregate roots</param>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IDataContext.Submit``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Raise domain events
+            </summary>
+            <typeparam name="T">event type</typeparam>
+            <param name="events">domain events</param>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IDataContext.Populate``1(Revenj.DomainPatterns.IReport{``0})">
+            <summary>
+            Populate report
+            </summary>
+            <typeparam name="T">report type</typeparam>
+            <param name="report">arguments for report</param>
+            <returns>populated report</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IDataContext.Track``1">
+            <summary>
+            Change tracking.
+            </summary>
+            <typeparam name="T">data type</typeparam>
+            <returns>notifications</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IDataContext.History``1(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            History for aggregate root changes.
+            </summary>
+            <typeparam name="T">aggregate type</typeparam>
+            <param name="uris">identifiers</param>
+            <returns>found history</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IDataContext.CubeBuilder``1">
+            <summary>
+            OLAP cube builder. Data analysis using dimensions and facts
+            </summary>
+            <typeparam name="T">cube type</typeparam>
+            <returns>cube builder</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.IDataContext.InvalidItems``2(Revenj.DomainPatterns.ISpecification{``1})">
+            <summary>
+            Data which fails specified validation.
+            Filtered using provided specification.
+            </summary>
+            <typeparam name="TValidation">validation type</typeparam>
+            <typeparam name="TResult">validation target</typeparam>
+            <param name="specification">search only subset of data</param>
+            <returns>found invalid items</returns>
+        </member>
+        <member name="T:Revenj.DomainPatterns.DataContextHelper">
+            <summary>
+            Data context helper methods
+            </summary>
+        </member>
+        <member name="M:Revenj.DomainPatterns.DataContextHelper.Find``1(Revenj.DomainPatterns.IDataContext,System.String)">
+            <summary>
+            Find identifiable object using provided URI
+            </summary>
+            <typeparam name="T">data type</typeparam>
+            <param name="context">data context</param>
+            <param name="uri">search by URI</param>
+            <returns>found object or null</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.DataContextHelper.Create``1(Revenj.DomainPatterns.IDataContext,``0)">
+            <summary>
+            Create new aggregate root.
+            Data will be sent immediately to the backing store.
+            </summary>
+            <typeparam name="T">aggregate type</typeparam>
+            <param name="context">data context</param>
+            <param name="root">root instance</param>
+        </member>
+        <member name="M:Revenj.DomainPatterns.DataContextHelper.Update``1(Revenj.DomainPatterns.IDataContext,System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Bulk update existing aggregate roots.
+            Data will be sent immediately to the backing store.
+            Change tracking value will be used if available.
+            </summary>
+            <typeparam name="T">aggregate type</typeparam>
+            <param name="context">data context</param>
+            <param name="aggregates">aggregate root instances</param>
+        </member>
+        <member name="M:Revenj.DomainPatterns.DataContextHelper.Update``1(Revenj.DomainPatterns.IDataContext,``0)">
+            <summary>
+            Update existing aggregate root.
+            Data will be sent immediately to the backing store.
+            Change tracking value will be used if available.
+            </summary>
+            <typeparam name="T">aggregate type</typeparam>
+            <param name="context">data context</param>
+            <param name="root">root instance</param>
+        </member>
+        <member name="M:Revenj.DomainPatterns.DataContextHelper.Update``1(Revenj.DomainPatterns.IDataContext,``0,``0)">
+            <summary>
+            Update existing aggregate root.
+            Data will be sent immediately to the backing store.
+            </summary>
+            <typeparam name="T">aggregate type</typeparam>
+            <param name="context">data context</param>
+            <param name="oldRoot">old instance</param>
+            <param name="newRoot">new instance</param>
+        </member>
+        <member name="M:Revenj.DomainPatterns.DataContextHelper.Delete``1(Revenj.DomainPatterns.IDataContext,``0)">
+            <summary>
+            Delete existing aggregate root.
+            Data will be sent immediately to the backing store.
+            </summary>
+            <typeparam name="T">aggregate type</typeparam>
+            <param name="context">data context</param>
+            <param name="root">root instance</param>
+        </member>
+        <member name="M:Revenj.DomainPatterns.DataContextHelper.History``1(Revenj.DomainPatterns.IDataContext,System.String)">
+            <summary>
+            Find history for provided aggregate root.
+            </summary>
+            <typeparam name="T">aggregate type</typeparam>
+            <param name="context">data context</param>
+            <param name="uri">root URI</param>
+            <returns>found history</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.DataContextHelper.InvalidItems``2(Revenj.DomainPatterns.IDataContext)">
+            <summary>
+            Data which fails specified validation.
+            </summary>
+            <typeparam name="TValidation">validation type</typeparam>
+            <typeparam name="TResult">validation target</typeparam>
+            <returns>found invalid items</returns>
+        </member>
+        <member name="M:Revenj.DomainPatterns.DataContextHelper.Submit``1(Revenj.DomainPatterns.IDataContext,``0)">
+            <summary>
+            Submit single Domain Event
+            </summary>
+            <typeparam name="TEvent">domain event type</typeparam>
+            <param name="context">data context</param>
+            <param name="domainEvent">domain event</param>
+        </member>
+    </members>
+</doc>

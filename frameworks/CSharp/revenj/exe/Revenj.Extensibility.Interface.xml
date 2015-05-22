@@ -1,0 +1,1134 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Revenj.Extensibility.Interface</name>
+    </assembly>
+    <members>
+        <member name="T:Revenj.Extensibility.ITypeResolver">
+            <summary>
+            Type resolver service.
+            Domain types and other system types can be resolved from this service.
+            This enables access to dynamic types which are not available at compile time.
+            </summary>
+        </member>
+        <member name="M:Revenj.Extensibility.ITypeResolver.Resolve(System.String)">
+            <summary>
+            Try to find type by its name.
+            If type is not found null will be returned.
+            </summary>
+            <param name="name">type name</param>
+            <returns>found type</returns>
+        </member>
+        <member name="T:Revenj.Extensibility.IExtensibilityProvider">
+            <summary>
+            MEF plugins are resolved from extensibility provider.
+            Plugins are decorated with Export attribute.
+            </summary>
+        </member>
+        <member name="M:Revenj.Extensibility.IExtensibilityProvider.FindPlugins``1(System.Func{System.Type,System.Type,System.Boolean})">
+            <summary>
+            Find plugin types which implement specified interface and satisfy filter predicate.
+            Filter predicate tests for plugin type and target type (Implements).
+            Plugin types are topologically sorted based on their dependencies.
+            </summary>
+            <typeparam name="TInterface">plugin must implement provided interface</typeparam>
+            <param name="filter">filter plugins</param>
+            <returns>found plugins</returns>
+        </member>
+        <member name="M:Revenj.Extensibility.IExtensibilityProvider.FindImplementations``1(System.Func{System.Type,System.Type,System.Boolean})">
+            <summary>
+            Find implementations for concepts for specified interface which satisfy filter predicate.
+            Result is collection of found concepts and their implementations.
+            Implementations are topologically sorted based on their dependencies.
+            </summary>
+            <typeparam name="TImplementation">plugin must implement provided interface</typeparam>
+            <param name="filter">filter implementations</param>
+            <returns>map of concepts and their implementations</returns>
+        </member>
+        <member name="M:Revenj.Extensibility.IExtensibilityProvider.FindExtensions``1">
+            <summary>
+            Find extensions for specified interface.
+            Extensions are MEF plugins which Export target attribute.
+            </summary>
+            <typeparam name="TImplementation">extension must export provided interface</typeparam>
+            <returns>found extensions</returns>
+        </member>
+        <member name="T:Revenj.Extensibility.ExtensibilityProviderHelper">
+            <summary>
+            Helper for plugin lookup
+            </summary>
+        </member>
+        <member name="M:Revenj.Extensibility.ExtensibilityProviderHelper.FindPlugins``1(Revenj.Extensibility.IExtensibilityProvider)">
+            <summary>
+            Find all plugin types which implement specified interface/service contract.
+            Plugin types are topologically sorted based on their dependencies.
+            </summary>
+            <typeparam name="TService">plugin must have specified service signature</typeparam>
+            <param name="provider">extensibility service</param>
+            <returns>found plugins</returns>
+        </member>
+        <member name="M:Revenj.Extensibility.ExtensibilityProviderHelper.ResolvePlugins``1(Revenj.Extensibility.IExtensibilityProvider)">
+            <summary>
+            Resolve all plugins which implement specified interface.
+            Plugins are cached and same instances are provided on subsequent calls.
+            </summary>
+            <typeparam name="TInterface">plugin must implement provided interface</typeparam>
+            <param name="provider">extensibility service</param>
+            <returns>resolved plugins</returns>
+        </member>
+        <member name="M:Revenj.Extensibility.ExtensibilityProviderHelper.FindImplementations``1(Revenj.Extensibility.IExtensibilityProvider)">
+            <summary>
+            Find all implementations for concepts for specified interface.
+            Result is collection of found concepts and their implementations.
+            Implementations are topologically sorted based on their dependencies.
+            </summary>
+            <typeparam name="TImplementation">plugin must implement provided interface</typeparam>
+            <param name="provider">extensibility service</param>
+            <returns>map of concepts and their implementations</returns>
+        </member>
+        <member name="T:Revenj.Extensibility.Metadata">
+            <summary>
+            MEF metadata.
+            For specifying dependencies and additional plugin info.
+            </summary>
+        </member>
+        <member name="F:Revenj.Extensibility.Metadata.ClassType">
+            <summary>
+            Since MEF doesn't know actual type, repeat the target class type using this attribute.
+            This should be used when class has dependencies so they can be resolved from container.
+            </summary>
+        </member>
+        <member name="F:Revenj.Extensibility.Metadata.InsteadOf">
+            <summary>
+            When MEF plugin should be used instead of some other plugin.
+            </summary>
+        </member>
+        <member name="F:Revenj.Extensibility.Metadata.Implements">
+            <summary>
+            Specify concept type which plugin implements.
+            </summary>
+        </member>
+        <member name="F:Revenj.Extensibility.Metadata.After">
+            <summary>
+            Define plugin dependency. This plugin should be used after specified plugin.
+            </summary>
+        </member>
+        <member name="F:Revenj.Extensibility.Metadata.Before">
+            <summary>
+            Define plugin dependency. This plugin should be used before specified plugin.
+            </summary>
+        </member>
+        <member name="F:Revenj.Extensibility.Metadata.Extends">
+            <summary>
+            For aspects on concepts. Define which concept this plugin extends.
+            </summary>
+        </member>
+        <member name="T:Revenj.Extensibility.IPluginRepository`1">
+            <summary>
+            Helper interface for plugins.
+            Plugins can be resolved by full or short name
+            </summary>
+            <typeparam name="TTarget">plugin type</typeparam>
+        </member>
+        <member name="M:Revenj.Extensibility.IPluginRepository`1.Find(System.String)">
+            <summary>
+            Find plugin by it's name.
+            </summary>
+            <param name="name">plugin name</param>
+            <returns>found plugin</returns>
+        </member>
+        <member name="T:Revenj.Extensibility.ISystemAspect">
+            <summary>
+            System aspects will be resolved during system startup.
+            Services can configure system behavior.
+            </summary>
+        </member>
+        <member name="M:Revenj.Extensibility.ISystemAspect.Initialize(Revenj.Extensibility.IObjectFactory)">
+            <summary>
+            Initialize aspect and provide system scope
+            </summary>
+            <param name="factory">system scope</param>
+        </member>
+        <member name="T:Revenj.Extensibility.ServiceAttribute">
+            <summary>
+            Attribute for registering class into the container.
+            When some service is not registered using standard methods,
+            this alternative method can be used for registering service where it was declared.
+            </summary>
+        </member>
+        <member name="F:Revenj.Extensibility.ServiceAttribute.Scope">
+            <summary>
+            Registered service scope
+            </summary>
+        </member>
+        <member name="M:Revenj.Extensibility.ServiceAttribute.#ctor">
+            <summary>
+            Service will have transient scope by default
+            </summary>
+        </member>
+        <member name="M:Revenj.Extensibility.ServiceAttribute.#ctor(Revenj.Extensibility.InstanceScope)">
+            <summary>
+            Register service using specified scope
+            </summary>
+            <param name="scope">instance scope</param>
+        </member>
+        <member name="T:Revenj.Extensibility.IAspectRegistrator">
+            <summary>
+            AOP management service.
+            Register aspects on join points.
+            </summary>
+        </member>
+        <member name="M:Revenj.Extensibility.IAspectRegistrator.Before(System.Type,System.Action)">
+            <summary>
+            Register aspect which will be invoked before type construction.
+            </summary>
+            <param name="type">target class/interface</param>
+            <param name="before">advice which will be invoked</param>
+        </member>
+        <member name="M:Revenj.Extensibility.IAspectRegistrator.After(System.Type,System.Action{System.Object})">
+            <summary>
+            Register aspect which will be invoked after type construction.
+            Constructed instance will be provided to the advice.
+            </summary>
+            <param name="type">target class/interface</param>
+            <param name="after">advice which will be invoked</param>
+        </member>
+        <member name="M:Revenj.Extensibility.IAspectRegistrator.Before(System.Type,System.Reflection.MethodInfo,System.Action{System.Object,System.Object[]})">
+            <summary>
+            Register aspect which will be invoked before a method call on specified type.
+            Instance and arguments will be provided to the advice.
+            </summary>
+            <param name="type">target class/interface</param>
+            <param name="method">target method</param>
+            <param name="before">advice which will be invoked</param>
+        </member>
+        <member name="M:Revenj.Extensibility.IAspectRegistrator.Around(System.Type,System.Reflection.MethodInfo,System.Func{System.Object,System.Object[],System.Func{System.Object[],System.Object},System.Object})">
+            <summary>
+            Register aspect which will be invoked around a method call on specified type.
+            Base method call will be provided so advice can choose to invoke it or ignore it.
+            Instance and arguments will be provided.
+            Advice is expected to return the result (null for void methods).
+            </summary>
+            <param name="type">target class/interface</param>
+            <param name="method">target method</param>
+            <param name="around">advice which will be invoked</param>
+        </member>
+        <member name="M:Revenj.Extensibility.IAspectRegistrator.After(System.Type,System.Reflection.MethodInfo,System.Func{System.Object,System.Object[],System.Object,System.Object})">
+            <summary>
+            Register aspect which will be invoked after method call on specified type.
+            Instance, arguments and result will be provided to the advice.
+            Advice can modify provided result.
+            </summary>
+            <param name="type">target class/interface</param>
+            <param name="method">target method</param>
+            <param name="after">advice which will be invoked</param>
+        </member>
+        <member name="T:Revenj.Extensibility.AspectRepositoryHelper">
+            <summary>
+            Type-safe helper for aspect registration.
+            </summary>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.Before``1(Revenj.Extensibility.IAspectRegistrator,System.Action)">
+            <summary>
+            Register aspect which will be invoked before type construction.
+            </summary>
+            <typeparam name="T">target type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="action">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.After``1(Revenj.Extensibility.IAspectRegistrator,System.Action{``0})">
+            <summary>
+            Register aspect which will be invoked after type construction.
+            Created instance will be provided to the advice.
+            </summary>
+            <typeparam name="T">target type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="action">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.Before(Revenj.Extensibility.IAspectRegistrator,System.Type,System.Linq.Expressions.LambdaExpression,System.Action{System.Object,System.Object[]})">
+            <summary>
+            Register aspect which will be invoked before a method call on specified type.
+            Method call is specified with lambda expression.
+            Advice is invoked with target instance and method arguments.
+            </summary>
+            <param name="repository">aspect management service</param>
+            <param name="type">target class/interface</param>
+            <param name="lambda">join point</param>
+            <param name="action">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.Around(Revenj.Extensibility.IAspectRegistrator,System.Type,System.Linq.Expressions.LambdaExpression,System.Func{System.Object,System.Object[],System.Func{System.Object[],System.Object},System.Object})">
+            <summary>
+            Register aspect which will be invoked around a method call on specified type.
+            Method call is defined with lambda expression.
+            Base method call will be provided so advice can choose to invoke it or ignore it.
+            Instance and arguments will be provided.
+            Advice is expected to return the result (null for void methods).
+            </summary>
+            <param name="repository">aspect management service</param>
+            <param name="type">target class/interface</param>
+            <param name="lambda">join point</param>
+            <param name="func">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.After(Revenj.Extensibility.IAspectRegistrator,System.Type,System.Linq.Expressions.LambdaExpression,System.Func{System.Object,System.Object[],System.Object,System.Object})">
+            <summary>
+            Register aspect which will be invoked after method call on specified type.
+            Method call is defined with lambda expression.
+            Advice will be provided with target instance, arguments and result.
+            Advice can return alternative result.
+            </summary>
+            <param name="repository">aspect management service</param>
+            <param name="type">target class/interface</param>
+            <param name="lambda">join point</param>
+            <param name="func">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.Before``1(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Action{``0}},System.Action{``0})">
+            <summary>
+            Register aspect which will be invoked before a method call without argument on specified type.
+            Method call is specified with expression.
+            Advice is invoked with target instance.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="action">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.Before``2(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Action{``0}},System.Action{``0,``1})">
+            <summary>
+            Register aspect which will be invoked before a method call with single argument on specified type.
+            Method call is specified with expression.
+            Advice is invoked with target instance and provided argument.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TArg">method argument</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="action">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.Before``3(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Action{``0}},System.Action{``0,``1,``2})">
+            <summary>
+            Register aspect which will be invoked before a method call with two arguments on specified type.
+            Method call is specified with expression.
+            Advice is invoked with target instance and provided arguments.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TArg1">first method argument</typeparam>
+            <typeparam name="TArg2">second method argument</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="action">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.Before``2(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Action{``0})">
+            <summary>
+            Register aspect which will be invoked before a function without arguments on specified type.
+            Function is specified with expression.
+            Advice is invoked with target instance.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TResult">function result type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="action">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.Before``3(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Func{``0,``2}},System.Func{``0,``1,``2})">
+            <summary>
+            Register aspect which will be invoked before a function with single argument on specified type.
+            Function is specified with expression.
+            Advice is invoked with target instance and provided argument.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TArg">function argument type</typeparam>
+            <typeparam name="TResult">function result type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="func">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.Before``4(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Func{``0,``3}},System.Func{``0,``1,``2,``3})">
+            <summary>
+            Register aspect which will be invoked before a function with two arguments on specified type.
+            Function is specified with expression.
+            Advice is invoked with target instance and provided arguments.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TArg1">function first argument type</typeparam>
+            <typeparam name="TArg2">function second argument type</typeparam>
+            <typeparam name="TResult">function result type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="func">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.Around``1(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Action{``0}},System.Action{System.Action})">
+            <summary>
+            Register aspect which will be invoked around a method call on specified type.
+            Method call is defined with expression.
+            Base method call will be provided so advice can choose to invoke it or ignore it.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="action">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.Around``1(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Action{``0}},System.Action{``0})">
+            <summary>
+            Register aspect which will be invoked around a method call on specified type.
+            Method call is defined with expression.
+            Target instance will be provided to the advice.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="action">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.Around``2(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Action{``0}},System.Action{``1,System.Action{``1}})">
+            <summary>
+            Register aspect which will be invoked on a method call with single argument on specified type.
+            Method call is defined with expression.
+            Target instance and argument will be provided to the aspect.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TArg">target argument type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="action">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.Around``2(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Action{``0}},System.Action{``0,``1,System.Action{``1}})">
+            <summary>
+            Register aspect which will be invoked on a method call with single argument on specified type.
+            Method call is defined with expression.
+            Base method call will be provided so advice can choose to invoke it or ignore it.
+            Target instance, argument and base method call will be provided to the aspect.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TArg">method call argument type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="action">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.Around``3(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Action{``0}},System.Action{``1,``2,System.Action{``1,``2}})">
+            <summary>
+            Register aspect which will be invoked on a method call with two arguments on specified type.
+            Method call is defined with expression.
+            Base method call will be provided so advice can choose to invoke it or ignore it.
+            Arguments and base method call will be provided to the aspect.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TArg1">first method call argument type</typeparam>
+            <typeparam name="TArg2">second method call argument type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="action">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.Around``3(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Action{``0}},System.Action{``0,``1,``2,System.Action{``1,``2}})">
+            <summary>
+            Register aspect which will be invoked on a method call with two arguments on specified type.
+            Method call is defined with expression.
+            Base method call will be provided so advice can choose to invoke it or ignore it.
+            Target instance, arguments and base method call will be provided to the aspect.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TArg1">first method call argument type</typeparam>
+            <typeparam name="TArg2">second method call argument type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="action">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.Around``2(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Func{System.Func{``1},``1})">
+            <summary>
+            Register aspect which will be invoked on a function without arguments on specified type.
+            Function is defined with expression.
+            Base function be provided so advice can choose to invoke it or ignore it.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TResult">function result type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="func">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.Around``2(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Func{``0,System.Func{``1},``1})">
+            <summary>
+            Register aspect which will be invoked on a function without arguments on specified type.
+            Function is defined with expression.
+            Base function be provided so advice can choose to invoke it or ignore it.
+            Target instance and base function will be provided to the advice.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TResult">function result type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="func">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.Around``3(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Func{``0,``2}},System.Func{``1,System.Func{``1,``2},``2})">
+            <summary>
+            Register aspect which will be invoked on a function with single argument on specified type.
+            Function is defined with expression.
+            Base function be provided so advice can choose to invoke it or ignore it.
+            Argument and base function will be provided to the aspect.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TArg">function argument type</typeparam>
+            <typeparam name="TResult">function result type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="func">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.Around``3(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Func{``0,``2}},System.Func{``0,``1,System.Func{``1,``2},``2})">
+            <summary>
+            Register aspect which will be invoked on a function with single argument on specified type.
+            Function is defined with expression.
+            Base function be provided so advice can choose to invoke it or ignore it.
+            Target instance, argument and base function will be provided to the aspect.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TArg">function argument type</typeparam>
+            <typeparam name="TResult">function result type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="func">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.Around``4(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Func{``0,``3}},System.Func{``1,``2,System.Func{``1,``2,``3},``3})">
+            <summary>
+            Register aspect which will be invoked on a function with two arguments on specified type.
+            Function is defined with expression.
+            Base function be provided so advice can choose to invoke it or ignore it.
+            Arguments and base function will be provided to the aspect.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TArg1">function first argument type</typeparam>
+            <typeparam name="TArg2">function second argument type</typeparam>
+            <typeparam name="TResult">function result type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="func">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.Around``4(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Func{``0,``3}},System.Func{``0,``1,``2,System.Func{``1,``2,``3},``3})">
+            <summary>
+            Register aspect which will be invoked on a function with two arguments on specified type.
+            Function is defined with expression.
+            Base function be provided so advice can choose to invoke it or ignore it.
+            Target instance, arguments and base function will be provided to the aspect.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TArg1">function first argument type</typeparam>
+            <typeparam name="TArg2">function second argument type</typeparam>
+            <typeparam name="TResult">function result type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="func">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.Around``5(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Func{``0,``4}},System.Func{``1,``2,``3,System.Func{``1,``2,``3,``4},``4})">
+            <summary>
+            Register aspect which will be invoked on a function with three arguments on specified type.
+            Function is defined with expression.
+            Base function be provided so advice can choose to invoke it or ignore it.
+            Arguments and base function will be provided to the aspect.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TArg1">function first argument type</typeparam>
+            <typeparam name="TArg2">function second argument type</typeparam>
+            <typeparam name="TArg3">function third argument type</typeparam>
+            <typeparam name="TResult">function result type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="func">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.Around``5(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Func{``0,``4}},System.Func{``0,``1,``2,``3,System.Func{``1,``2,``3,``4},``4})">
+            <summary>
+            Register aspect which will be invoked on a function with three arguments on specified type.
+            Function is defined with expression.
+            Base function be provided so advice can choose to invoke it or ignore it.
+            Target instance, arguments and base function will be provided to the aspect.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TArg1">function first argument type</typeparam>
+            <typeparam name="TArg2">function second argument type</typeparam>
+            <typeparam name="TArg3">function third argument type</typeparam>
+            <typeparam name="TResult">function result type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="func">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.Around``6(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Func{``0,``5}},System.Func{``1,``2,``3,``4,System.Func{``1,``2,``3,``4,``5},``5})">
+            <summary>
+            Register aspect which will be invoked on a function with four arguments on specified type.
+            Function is defined with expression.
+            Base function be provided so advice can choose to invoke it or ignore it.
+            Arguments and base function will be provided to the aspect.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TArg1">function first argument type</typeparam>
+            <typeparam name="TArg2">function second argument type</typeparam>
+            <typeparam name="TArg3">function third argument type</typeparam>
+            <typeparam name="TArg4">function fourth argument type</typeparam>
+            <typeparam name="TResult">function result type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="func">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.Around``6(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Func{``0,``5}},System.Func{``0,``1,``2,``3,``4,System.Func{``1,``2,``3,``4,``5},``5})">
+            <summary>
+            Register aspect which will be invoked on a function with four arguments on specified type.
+            Function is defined with expression.
+            Base function be provided so advice can choose to invoke it or ignore it.
+            Target instance, arguments and base function will be provided to the aspect.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TArg1">function first argument type</typeparam>
+            <typeparam name="TArg2">function second argument type</typeparam>
+            <typeparam name="TArg3">function third argument type</typeparam>
+            <typeparam name="TArg4">function fourth argument type</typeparam>
+            <typeparam name="TResult">function result type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="func">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.After``1(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Action{``0}},System.Action)">
+            <summary>
+            Register aspect which will be invoked after method call on specified type.
+            Method call is defined with expression.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="action">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.After``1(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Action{``0}},System.Action{``0})">
+            <summary>
+            Register aspect which will be invoked after method call on specified type.
+            Method call is defined with expression.
+            Advice will be provided with target instance.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="action">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.After``2(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Action{``0}},System.Action{``1})">
+            <summary>
+            Register aspect which will be invoked after method call with one argument on specified type.
+            Method call is defined with expression.
+            Advice will be provided with argument.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TArg">method argument type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="action">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.After``2(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Action{``0}},System.Action{``0,``1})">
+            <summary>
+            Register aspect which will be invoked after method call with one argument on specified type.
+            Method call is defined with expression.
+            Advice will be provided with target instance and argument.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TArg">method argument type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="action">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.After``3(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Action{``0}},System.Action{``1,``2})">
+            <summary>
+            Register aspect which will be invoked after method call with two arguments on specified type.
+            Method call is defined with expression.
+            Arguments will be provided to the advice.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TArg1">method argument type</typeparam>
+            <typeparam name="TArg2">method argument type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="action">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.After``3(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Action{``0}},System.Action{``0,``1,``2})">
+            <summary>
+            Register aspect which will be invoked after method call with two arguments on specified type.
+            Method call is defined with expression.
+            Target instance and arguments will be provided to the advice.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TArg1">method argument type</typeparam>
+            <typeparam name="TArg2">method argument type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="action">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.After``2(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Func{``1})">
+            <summary>
+            Register aspect which will be invoked after function without arguments on specified type.
+            Function is defined with expression.
+            Advice should return alternative result.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TResult">function result type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="func">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.After``2(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Func{``0,``1})">
+            <summary>
+            Register aspect which will be invoked after function without arguments on specified type.
+            Function is defined with expression.
+            Target instance will be provided to the advice.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TResult">function result type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="func">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.After``2(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Action{``0}},System.Func{``1,``1})">
+            <summary>
+            Register aspect which will be invoked after function without arguments on specified type.
+            Function is defined with expression.
+            Result will be provided to the advice.
+            Advice can return alternative result.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TResult">function result type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="func">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.After``2(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Action{``0}},System.Func{``0,``1,``1})">
+            <summary>
+            Register aspect which will be invoked after function without arguments on specified type.
+            Function is defined with expression.
+            Target instance and result will be provided to the advice.
+            Advice can return alternative result.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TResult">function result type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="func">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.After``3(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Action{``0}},System.Func{``1,``2,``2})">
+            <summary>
+            Register aspect which will be invoked after function with one argument on specified type.
+            Function is defined with expression.
+            Argument and result will be provided to the advice.
+            Advice can return alternative result.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TArg">function argument type</typeparam>
+            <typeparam name="TResult">function result type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="func">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.After``3(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Action{``0}},System.Func{``0,``1,``2,``2})">
+            <summary>
+            Register aspect which will be invoked after function with one argument on specified type.
+            Function is defined with expression.
+            Target instance, argument and result will be provided to the advice.
+            Advice can return alternative result.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TArg">function argument type</typeparam>
+            <typeparam name="TResult">function result type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="func">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.After``4(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Action{``0}},System.Func{``1,``2,``3,``3})">
+            <summary>
+            Register aspect which will be invoked after function with two arguments on specified type.
+            Function is defined with expression.
+            Arguments and result will be provided to the advice.
+            Advice can return alternative result.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TArg1">function first argument type</typeparam>
+            <typeparam name="TArg2">function second argument type</typeparam>
+            <typeparam name="TResult">function result type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="func">advice which will be applied</param>
+        </member>
+        <member name="M:Revenj.Extensibility.AspectRepositoryHelper.After``4(Revenj.Extensibility.IAspectRegistrator,System.Linq.Expressions.Expression{System.Action{``0}},System.Func{``0,``1,``2,``3,``3})">
+            <summary>
+            Register aspect which will be invoked after function with two arguments on specified type.
+            Function is defined with expression.
+            Target instance, arguments and result will be provided to the advice.
+            Advice can return alternative result.
+            </summary>
+            <typeparam name="TWhere">target class/interface</typeparam>
+            <typeparam name="TArg1">function first argument type</typeparam>
+            <typeparam name="TArg2">function second argument type</typeparam>
+            <typeparam name="TResult">function result type</typeparam>
+            <param name="repository">aspect management service</param>
+            <param name="expression">join point</param>
+            <param name="func">advice which will be applied</param>
+        </member>
+        <member name="T:Revenj.Extensibility.IMixinProvider">
+            <summary>
+            Service for creating mixins.
+            </summary>
+        </member>
+        <member name="M:Revenj.Extensibility.IMixinProvider.Create(System.Type,System.Object[],System.Collections.Generic.IEnumerable{System.Object})">
+            <summary>
+            Create mixin instance for target type using provided constructor arguments and combining provided instances.
+            </summary>
+            <param name="mixinType">target class type</param>
+            <param name="args">constructor arguments</param>
+            <param name="implementations">additional mixins</param>
+            <returns>object instance with merged mixins</returns>
+        </member>
+        <member name="T:Revenj.Extensibility.MixinProviderExtension">
+            <summary>
+            Helper method for creating mixins
+            </summary>
+        </member>
+        <member name="M:Revenj.Extensibility.MixinProviderExtension.Create``1(Revenj.Extensibility.IMixinProvider,System.Collections.Generic.IEnumerable{System.Object},System.Object[])">
+            <summary>
+            Create mixin for target class using provided instances and constructor arguments.
+            </summary>
+            <typeparam name="TMixin">target class</typeparam>
+            <param name="provider">mixin service</param>
+            <param name="implementations">additional mixins</param>
+            <param name="args">constructor arguments</param>
+            <returns>object instance with merged mixins</returns>
+        </member>
+        <member name="M:Revenj.Extensibility.MixinProviderExtension.Create``1(Revenj.Extensibility.IMixinProvider,System.Type,System.Object[])">
+            <summary>
+            Create mixin for target class using constructor arguments.
+            Usefull for abstract classes.
+            </summary>
+            <typeparam name="TMixin">target instance</typeparam>
+            <param name="provider">mixin service</param>
+            <param name="type">target class</param>
+            <param name="args">constructor arguments</param>
+            <returns>object instance</returns>
+        </member>
+        <member name="T:Revenj.Extensibility.IDslAspect">
+            <summary>
+            DSL aspects will be resolved during system startup.
+            Aspects will be registered for interception.
+            In production mode this aspects will not be loaded.
+            </summary>
+        </member>
+        <member name="M:Revenj.Extensibility.IDslAspect.Register(Revenj.Extensibility.IAspectRegistrator)">
+            <summary>
+            Register aspect into the system during system startup.
+            </summary>
+            <param name="aspects">aspect management service</param>
+        </member>
+        <member name="T:Revenj.Extensibility.PluginAttribute">
+            <summary>
+            Attribute for registering plugins into the container.
+            When plugins are not registered using standard methods,
+            this alternative method can be used for registering all plugins implementing this interface.
+            </summary>
+        </member>
+        <member name="F:Revenj.Extensibility.PluginAttribute.Scope">
+            <summary>
+            Registered plugins scope
+            </summary>
+        </member>
+        <member name="M:Revenj.Extensibility.PluginAttribute.#ctor">
+            <summary>
+            Plugins will have transient scope by default
+            </summary>
+        </member>
+        <member name="M:Revenj.Extensibility.PluginAttribute.#ctor(Revenj.Extensibility.InstanceScope)">
+            <summary>
+            Register plugins using specified scope
+            </summary>
+            <param name="scope">instance scope</param>
+        </member>
+        <member name="T:Revenj.Extensibility.IObjectFactory">
+            <summary>
+            Inversion of control container service.
+            Object factory should be used for scoping so dependencies can be specified for that scope.
+            </summary>
+        </member>
+        <member name="M:Revenj.Extensibility.IObjectFactory.IsRegistered(System.Type)">
+            <summary>
+            Check if service is registered with the factory
+            </summary>
+            <param name="type">service type</param>
+            <returns>is service registered</returns>
+        </member>
+        <member name="M:Revenj.Extensibility.IObjectFactory.Resolve(System.Type,System.Object[])">
+            <summary>
+            Resolve service from the factory. Instance is resolved based on scoping rules.
+            If service can't be resolved an exception will be thrown.
+            </summary>
+            <param name="type">service type</param>
+            <param name="args">argument for service resolution</param>
+            <returns>instance for requested service</returns>
+        </member>
+        <member name="M:Revenj.Extensibility.IObjectFactory.CreateScope(System.String)">
+            <summary>
+            Create nested scope. 
+            Scope should be used as unit of work, after which services resolved from that scope should be disposed.
+            If id is provided scope will be traced.
+            </summary>
+            <param name="id">specify scope identification</param>
+            <returns>created nested scope</returns>
+        </member>
+        <member name="M:Revenj.Extensibility.IObjectFactory.FindScope(System.String)">
+            <summary>
+            Named scopes can be used for durable transactions.
+            </summary>
+            <param name="id">scope identification</param>
+            <returns>found scope</returns>
+        </member>
+        <member name="M:Revenj.Extensibility.IObjectFactory.Register(Revenj.Extensibility.IObjectFactoryBuilder)">
+            <summary>
+            Register services to the container.
+            </summary>
+            <param name="builder">configuration for additional services</param>
+        </member>
+        <member name="T:Revenj.Extensibility.ObjectFactoryHelper">
+            <summary>
+            Container service helper
+            </summary>
+            <summary>
+            Helper methods for container registration
+            </summary>
+        </member>
+        <member name="M:Revenj.Extensibility.ObjectFactoryHelper.CreateInnerFactory(Revenj.Extensibility.IObjectFactory)">
+            <summary>
+            Create unnamed scope. This scope will not be tracked.
+            </summary>
+            <param name="factory">container service</param>
+            <returns>nested service</returns>
+        </member>
+        <member name="M:Revenj.Extensibility.ObjectFactoryHelper.Resolve``1(Revenj.Extensibility.IObjectFactory)">
+            <summary>
+            Resolve service from current scope.
+            If service can't be resolved an exception will be thrown.
+            </summary>
+            <typeparam name="T">service type</typeparam>
+            <param name="factory">current scope</param>
+            <returns>found and resolved service</returns>
+        </member>
+        <member name="M:Revenj.Extensibility.ObjectFactoryHelper.Resolve``1(Revenj.Extensibility.IObjectFactory,System.Type)">
+            <summary>
+            Resolve service from current scope.
+            If service can't be resolved an exception will be thrown.
+            </summary>
+            <typeparam name="T">resolved service type</typeparam>
+            <param name="factory">current scope</param>
+            <param name="type">registered/actual service type</param>
+            <returns>found and resolved service</returns>
+        </member>
+        <member name="M:Revenj.Extensibility.ObjectFactoryHelper.RegisterType(Revenj.Extensibility.IObjectFactory,System.Type)">
+            <summary>
+            Register specified type to the container as self using transient scope.
+            </summary>
+            <param name="factory">container scope</param>
+            <param name="type">service</param>
+        </member>
+        <member name="M:Revenj.Extensibility.ObjectFactoryHelper.RegisterType(Revenj.Extensibility.IObjectFactory,System.Type,System.Type,Revenj.Extensibility.InstanceScope)">
+            <summary>
+            Register specified type to the container as custom service with provided scope.
+            </summary>
+            <param name="factory">container scope</param>
+            <param name="type">service type</param>
+            <param name="asType">register as</param>
+            <param name="scope">resolution scope</param>
+        </member>
+        <member name="M:Revenj.Extensibility.ObjectFactoryHelper.RegisterGeneric(Revenj.Extensibility.IObjectFactory,System.Type,System.Type,Revenj.Extensibility.InstanceScope)">
+            <summary>
+            Register generic type to the container as custom service with provided scope.
+            </summary>
+            <param name="factory">container scope</param>
+            <param name="type">service type</param>
+            <param name="asType">register as</param>
+            <param name="scope">resolution scope</param>
+        </member>
+        <member name="M:Revenj.Extensibility.ObjectFactoryHelper.RegisterTypes(Revenj.Extensibility.IObjectFactory,System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            Register multiple types to the container as singletons.
+            </summary>
+            <param name="factory">current scope</param>
+            <param name="types">services</param>
+        </member>
+        <member name="M:Revenj.Extensibility.ObjectFactoryHelper.RegisterTypes(Revenj.Extensibility.IObjectFactory,System.Collections.Generic.IEnumerable{System.Type},Revenj.Extensibility.InstanceScope)">
+            <summary>
+            Register multiple types to the container with specified scope.
+            </summary>
+            <param name="factory">current scope</param>
+            <param name="types">services</param>
+            <param name="scope">resolution scope</param>
+        </member>
+        <member name="M:Revenj.Extensibility.ObjectFactoryHelper.RegisterInstance``1(Revenj.Extensibility.IObjectFactory,``0)">
+            <summary>
+            Register instance to the container scope.
+            Registered instance will be available in nested scopes too.
+            </summary>
+            <typeparam name="T">service</typeparam>
+            <param name="factory">current scope</param>
+            <param name="instance">provided instance</param>
+        </member>
+        <member name="M:Revenj.Extensibility.ObjectFactoryHelper.RegisterInterfaces``1(Revenj.Extensibility.IObjectFactory,``0)">
+            <summary>
+            Register all interfaces and specified service for provided instance to the container.
+            Services will be available in nested scopes too.
+            </summary>
+            <typeparam name="T">service type</typeparam>
+            <param name="factory">current scope</param>
+            <param name="instance">provided instance</param>
+        </member>
+        <member name="M:Revenj.Extensibility.ObjectFactoryHelper.RegisterFunc``1(Revenj.Extensibility.IObjectFactory,System.Func{Revenj.Extensibility.IObjectFactory,``0})">
+            <summary>
+            Register factory to the container with transient scope. 
+            Service will be resolved from the factory using contexed scope.
+            </summary>
+            <typeparam name="T">service type</typeparam>
+            <param name="factory">current scope</param>
+            <param name="func">factory to service</param>
+        </member>
+        <member name="M:Revenj.Extensibility.ObjectFactoryHelper.RegisterFunc``1(Revenj.Extensibility.IObjectFactory,System.Func{Revenj.Extensibility.IObjectFactory,``0},Revenj.Extensibility.InstanceScope)">
+            <summary>
+            Register factory to the container with specified scope.
+            Service will be resolved from the factory using contexed scope.
+            </summary>
+            <typeparam name="T">service type</typeparam>
+            <param name="factory">current scope</param>
+            <param name="func">factory to service</param>
+            <param name="scope">factory scope</param>
+        </member>
+        <member name="T:Revenj.Extensibility.ISystemState">
+            <summary>
+            Services which depend on boot state should use this to check system state.
+            </summary>
+        </member>
+        <member name="P:Revenj.Extensibility.ISystemState.IsBooting">
+            <summary>
+            Is system still booting
+            </summary>
+        </member>
+        <member name="P:Revenj.Extensibility.ISystemState.IsReady">
+            <summary>
+            Is system ready for use
+            </summary>
+        </member>
+        <member name="E:Revenj.Extensibility.ISystemState.Ready">
+            <summary>
+            Event will fire when system is ready for use
+            </summary>
+        </member>
+        <member name="T:Revenj.Extensibility.IObjectFactoryBuilder">
+            <summary>
+            Builder for registering services to the container.
+            Services can be instances, types or factories
+            </summary>
+        </member>
+        <member name="M:Revenj.Extensibility.IObjectFactoryBuilder.Add(Revenj.Extensibility.IFactoryBuilderInstance)">
+            <summary>
+            Register new instance.
+            </summary>
+            <param name="item">instance builder</param>
+        </member>
+        <member name="M:Revenj.Extensibility.IObjectFactoryBuilder.Add(Revenj.Extensibility.IFactoryBuilderType)">
+            <summary>
+            Register new type.
+            </summary>
+            <param name="item">type builder</param>
+        </member>
+        <member name="M:Revenj.Extensibility.IObjectFactoryBuilder.Add(Revenj.Extensibility.IFactoryBuilderFunc)">
+            <summary>
+            Register new factory.
+            </summary>
+            <param name="item">factory builder</param>
+        </member>
+        <member name="P:Revenj.Extensibility.IObjectFactoryBuilder.Instances">
+            <summary>
+            Registered instances.
+            </summary>
+        </member>
+        <member name="P:Revenj.Extensibility.IObjectFactoryBuilder.Types">
+            <summary>
+            Registered types.
+            </summary>
+        </member>
+        <member name="P:Revenj.Extensibility.IObjectFactoryBuilder.Funcs">
+            <summary>
+            Registered factories.
+            </summary>
+        </member>
+        <member name="T:Revenj.Extensibility.IFactoryBuilderInstance">
+            <summary>
+            Instance builder for container registration
+            </summary>
+        </member>
+        <member name="P:Revenj.Extensibility.IFactoryBuilderInstance.Instance">
+            <summary>
+            Provided instance.
+            </summary>
+        </member>
+        <member name="P:Revenj.Extensibility.IFactoryBuilderInstance.AsType">
+            <summary>
+            Registered as service.
+            </summary>
+        </member>
+        <member name="T:Revenj.Extensibility.InstanceScope">
+            <summary>
+            Service instance scope.
+            </summary>
+        </member>
+        <member name="F:Revenj.Extensibility.InstanceScope.Singleton">
+            <summary>
+            Same service will be resolved on subsequent request inside this
+            and nested scopes.
+            </summary>
+        </member>
+        <member name="F:Revenj.Extensibility.InstanceScope.Transient">
+            <summary>
+            New service will be resolved each time.
+            </summary>
+        </member>
+        <member name="F:Revenj.Extensibility.InstanceScope.Context">
+            <summary>
+            Same service will be resolved on subsequent request inside this scope.
+            </summary>
+        </member>
+        <member name="T:Revenj.Extensibility.IFactoryBuilderType">
+            <summary>
+            Type builder for container registration
+            </summary>
+        </member>
+        <member name="P:Revenj.Extensibility.IFactoryBuilderType.Type">
+            <summary>
+            Registered type.
+            </summary>
+        </member>
+        <member name="P:Revenj.Extensibility.IFactoryBuilderType.Scope">
+            <summary>
+            Specified scope.
+            </summary>
+        </member>
+        <member name="P:Revenj.Extensibility.IFactoryBuilderType.IsGeneric">
+            <summary>
+            Is registered as generic type.
+            </summary>
+        </member>
+        <member name="P:Revenj.Extensibility.IFactoryBuilderType.AsType">
+            <summary>
+            Registered as service.
+            </summary>
+        </member>
+        <member name="T:Revenj.Extensibility.IFactoryBuilderFunc">
+            <summary>
+            Factory builder for container registration
+            </summary>
+        </member>
+        <member name="P:Revenj.Extensibility.IFactoryBuilderFunc.Func">
+            <summary>
+            Registered factory.
+            </summary>
+        </member>
+        <member name="P:Revenj.Extensibility.IFactoryBuilderFunc.Scope">
+            <summary>
+            Specified scope.
+            </summary>
+        </member>
+        <member name="P:Revenj.Extensibility.IFactoryBuilderFunc.AsType">
+            <summary>
+            Registered as service.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,199 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Revenj.DatabasePersistence.Interface</name>
+    </assembly>
+    <members>
+        <member name="T:Revenj.DatabasePersistence.IDatabaseQueryManager">
+            <summary>
+            ADO.NET driver manager.
+            Create new database drivers and close existing ones.
+            </summary>
+        </member>
+        <member name="M:Revenj.DatabasePersistence.IDatabaseQueryManager.StartQuery(System.Boolean)">
+            <summary>
+            Start new ADO.NET driver.
+            If query is created with a transaction, it must be explicitly committed.
+            </summary>
+            <param name="withTransaction">use transaction</param>
+            <returns>database query</returns>
+        </member>
+        <member name="M:Revenj.DatabasePersistence.IDatabaseQueryManager.EndQuery(Revenj.DatabasePersistence.IDatabaseQuery,System.Boolean)">
+            <summary>
+            Close existing ADO.NET driver.
+            If query is created with a transaction provide true for success to commit transaction.
+            </summary>
+            <param name="query">database query</param>
+            <param name="success">was query successful</param>
+        </member>
+        <member name="T:Revenj.DatabasePersistence.DatabaseQueryManagerHelper">
+            <summary>
+            Utilities for ADO.NET driver manager.
+            </summary>
+        </member>
+        <member name="M:Revenj.DatabasePersistence.DatabaseQueryManagerHelper.BeginTransaction(Revenj.DatabasePersistence.IDatabaseQueryManager)">
+            <summary>
+            Start database query with a transaction.
+            </summary>
+            <param name="manager">query manager</param>
+            <returns>ADO.NET driver</returns>
+        </member>
+        <member name="M:Revenj.DatabasePersistence.DatabaseQueryManagerHelper.CreateQuery(Revenj.DatabasePersistence.IDatabaseQueryManager)">
+            <summary>
+            Start database query without a transaction.
+            </summary>
+            <param name="manager">query manager</param>
+            <returns>ADO.NET driver</returns>
+        </member>
+        <member name="M:Revenj.DatabasePersistence.DatabaseQueryManagerHelper.Commit(Revenj.DatabasePersistence.IDatabaseQueryManager,Revenj.DatabasePersistence.IDatabaseQuery)">
+            <summary>
+            Commit started transaction.
+            </summary>
+            <param name="manager">query manager</param>
+            <param name="query">ADO.NET driver</param>
+        </member>
+        <member name="M:Revenj.DatabasePersistence.DatabaseQueryManagerHelper.Rollback(Revenj.DatabasePersistence.IDatabaseQueryManager,Revenj.DatabasePersistence.IDatabaseQuery)">
+            <summary>
+            Rollback started transaction.
+            </summary>
+            <param name="manager">query manager</param>
+            <param name="query">ADO.NET driver</param>
+        </member>
+        <member name="T:Revenj.DatabasePersistence.IDatabaseQuery">
+            <summary>
+            ADO.NET database abstraction.
+            Execute SQL queries on database.
+            </summary>
+        </member>
+        <member name="M:Revenj.DatabasePersistence.IDatabaseQuery.NewCommand">
+            <summary>
+            Create new database command for specific ADO.NET driver.
+            </summary>
+            <returns>new command</returns>
+        </member>
+        <member name="M:Revenj.DatabasePersistence.IDatabaseQuery.Execute(System.Data.IDbCommand)">
+            <summary>
+            Execute query on the database without the regards for result.
+            Connection and transaction information will be appended to the provided command.
+            command.Execute() will be called.
+            </summary>
+            <param name="command">database command</param>
+            <returns>base ExecuteNonQuery result</returns>
+        </member>
+        <member name="M:Revenj.DatabasePersistence.IDatabaseQuery.Execute(System.Data.IDbCommand,System.Action{System.Data.IDataReader})">
+            <summary>
+            Execute query on the database and loop through the reader.
+            Connection and transaction information will be appended to the provided command.
+            command.ExecuteDataReader() will be called.
+            </summary>
+            <param name="command">database command</param>
+            <param name="action">handle result returned from the database</param>
+        </member>
+        <member name="M:Revenj.DatabasePersistence.IDatabaseQuery.Fill(System.Data.IDbCommand,System.Data.DataSet)">
+            <summary>
+            Execute query on the database and fill DataSet with the result.
+            Connection and transaction information will be appended to the provided command.
+            </summary>
+            <param name="command"></param>
+            <param name="table"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Revenj.DatabasePersistence.IDatabaseQuery.InTransaction">
+            <summary>
+            Is current query inside a transaction.
+            </summary>
+        </member>
+        <member name="T:Revenj.DatabasePersistence.DatabaseQueryHelper">
+            <summary>
+            Utilities for ADO.NET access.
+            </summary>
+        </member>
+        <member name="M:Revenj.DatabasePersistence.DatabaseQueryHelper.Field``1(System.Data.IDataRecord,System.String)">
+            <summary>
+            Read field from the record.
+            </summary>
+            <typeparam name="T">field type</typeparam>
+            <param name="dr">data reader</param>
+            <param name="name">field name</param>
+            <returns>field value</returns>
+        </member>
+        <member name="M:Revenj.DatabasePersistence.DatabaseQueryHelper.Execute(Revenj.DatabasePersistence.IDatabaseQuery,System.String,System.Object[])">
+            <summary>
+            Execute query on the database without the regards for result.
+            Connection and transaction information will be appended to the provided command.
+            </summary>
+            <param name="query">ADO.NET driver</param>
+            <param name="sql">sql to execute</param>
+            <param name="parameters">sql parameters</param>
+            <returns>comand.Execute() result</returns>
+        </member>
+        <member name="M:Revenj.DatabasePersistence.DatabaseQueryHelper.CreateCommand(Revenj.DatabasePersistence.IDatabaseQuery,System.String,System.Object[])">
+            <summary>
+            Create database command using provided sql and by
+            replacing ? with parameter arguments.
+            </summary>
+            <param name="query">ADO.NET driver</param>
+            <param name="sql">sql to execute</param>
+            <param name="parameters">parameters to bind</param>
+            <returns></returns>
+        </member>
+        <member name="M:Revenj.DatabasePersistence.DatabaseQueryHelper.Execute(Revenj.DatabasePersistence.IDatabaseQuery,System.String,System.Action{System.Data.IDataReader},System.Object[])">
+            <summary>
+            Execute query on the database and loop through the reader.
+            Connection and transaction information will be appended to the provided command.
+            Provided parameters will be inserted into the command.
+            command.ExecuteDataReader() will be called.
+            </summary>
+            <param name="query">ADO.NET driver</param>
+            <param name="sql">sql to execute</param>
+            <param name="action">datareader converter</param>
+            <param name="parameters">command parameters</param>
+        </member>
+        <member name="M:Revenj.DatabasePersistence.DatabaseQueryHelper.Fill``1(Revenj.DatabasePersistence.IDatabaseQuery,System.String,System.Func{System.Data.IDataReader,``0},System.Object[])">
+            <summary>
+            Execute query on the database and loop through the reader.
+            Return list populated from instance factory.
+            Connection and transaction information will be appended to the provided command.
+            command.ExecuteDataReader() will be called.
+            </summary>
+            <typeparam name="T">result type</typeparam>
+            <param name="query">ADO.NET driver</param>
+            <param name="sql">sql to execute</param>
+            <param name="instancer">object factory</param>
+            <param name="parameters">additional command parameters</param>
+            <returns>populated list</returns>
+        </member>
+        <member name="M:Revenj.DatabasePersistence.DatabaseQueryHelper.Fill(Revenj.DatabasePersistence.IDatabaseQuery,System.String,System.Object[])">
+            <summary>
+            Execute query on the database and fill DataTable with the result.
+            Connection and transaction information will be appended to the provided command.
+            </summary>
+            <param name="query">ADO.NET driver</param>
+            <param name="sql">sql to execute</param>
+            <param name="parameters">sql additional parameters</param>
+            <returns>populated table</returns>
+        </member>
+        <member name="M:Revenj.DatabasePersistence.DatabaseQueryHelper.Fill(Revenj.DatabasePersistence.IDatabaseQuery,System.Data.IDbCommand)">
+            <summary>
+            Execute query on the database and fill DataTable with the result.
+            Connection and transaction information will be appended to the provided command.
+            </summary>
+            <param name="query">ADO.NET driver</param>
+            <param name="command">command to execute</param>
+            <param name="parameters">sql additional parameters</param>
+            <returns>populated table</returns>
+        </member>
+        <member name="M:Revenj.DatabasePersistence.DatabaseQueryHelper.Get``1(Revenj.DatabasePersistence.IDatabaseQuery,System.String,System.Func{System.Data.IDataReader,``0},System.Object[])">
+            <summary>
+            Execute query on the database and return converted result.
+            Connection and transaction information will be appended to the provided command.
+            </summary>
+            <typeparam name="T">result type</typeparam>
+            <param name="query">ADO.NET driver</param>
+            <param name="sql">sql to execute</param>
+            <param name="instancer">object factory</param>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

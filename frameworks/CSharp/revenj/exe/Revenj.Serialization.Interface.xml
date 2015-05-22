@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Revenj.Serialization.Interface</name>
+    </assembly>
+    <members>
+        <member name="T:Revenj.Serialization.ISerialization`1">
+            <summary>
+            Generic serialization interface. 
+            Use TFormat to specify serialization type (example: ISerialization&lt;string&gt; for JSON serialization).
+            During deserialization provide IServiceLocator to context information when required
+            </summary>
+            <typeparam name="TFormat">define serialization type</typeparam>
+        </member>
+        <member name="M:Revenj.Serialization.ISerialization`1.Serialize``1(``0)">
+            <summary>
+            Serialize object to appropriate format (XElement, StreamReader, MemoryStream...)
+            </summary>
+            <typeparam name="T">argument type. It will be inferred</typeparam>
+            <param name="value">argument for serialization</param>
+            <returns>serialized representation of provided argument</returns>
+        </member>
+        <member name="M:Revenj.Serialization.ISerialization`1.Deserialize``1(`0,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Deserialize object from provided format. 
+            Provide context to initialize object and references after deserialization
+            </summary>
+            <typeparam name="T">Specify object type</typeparam>
+            <param name="data">serialized object in provided format</param>
+            <param name="context">context info for initialization after deserialization</param>
+            <returns>deserialized object</returns>
+        </member>
+        <member name="T:Revenj.Serialization.SerializationHelper">
+            <summary>
+            Helper class for deserialization
+            </summary>
+        </member>
+        <member name="M:Revenj.Serialization.SerializationHelper.Deserialize``2(Revenj.Serialization.ISerialization{``0},``0)">
+            <summary>
+            Deserialize object without providing context information.
+            .NET objects or value objects don't require context so they can be deserialized
+            without IServiceLocator in context.
+            </summary>
+            <typeparam name="TFormat">serialization format</typeparam>
+            <typeparam name="T">object type</typeparam>
+            <param name="serialization">serialization service</param>
+            <param name="data">serialized object in specified format</param>
+            <returns>deserialized object</returns>
+        </member>
+        <member name="M:Revenj.Serialization.SerializationHelper.Deserialize``2(Revenj.Serialization.ISerialization{``0},``0,System.Object)">
+            <summary>
+            Deserialize object using provided context information.
+            Context should usually be IServiceLocator, but in special cases can be something else.
+            </summary>
+            <typeparam name="TFormat">serialization format</typeparam>
+            <typeparam name="T">object type</typeparam>
+            <param name="serialization">serialization service</param>
+            <param name="data">serialized object in specified format</param>
+            <param name="context">context information which will be used during deserialization</param>
+            <returns>deserialized object</returns>
+        </member>
+        <member name="T:Revenj.Serialization.IWireSerialization">
+            <summary>
+            Serialization interface for on and from the wire communication. 
+            Specify accept/contentType for appropriate serialization.
+            During deserialization provide IServiceLocator to context information when required
+            </summary>
+        </member>
+        <member name="M:Revenj.Serialization.IWireSerialization.Serialize(System.Object,System.String,System.IO.Stream)">
+            <summary>
+            Serialize object to appropriate format XML, JSON, Protocol buffer within the stream
+            </summary>
+            <param name="value">argument for serialization</param>
+            <param name="accept">allowed formats</param>
+            <param name="destination">serialization destination</param>
+            <returns>serialization format</returns>
+        </member>
+        <member name="M:Revenj.Serialization.IWireSerialization.Deserialize(System.IO.Stream,System.Type,System.String,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Deserialize object from provided format. 
+            Provide context to initialize object and references after deserialization
+            </summary>
+            <param name="source">raw data in specified format</param>
+            <param name="target">object type</param>
+            <param name="contentType">specified serialization format</param>
+            <param name="context">context info for initialization after deserialization</param>
+            <returns>deserialized object</returns>
+        </member>
+        <member name="M:Revenj.Serialization.IWireSerialization.GetSerializer``1">
+            <summary>
+            Get serializer for specified format (eg. XElement for XML, string for JSON, etc...)
+            </summary>
+            <typeparam name="TFormat">serializer format</typeparam>
+            <returns>serializer instance</returns>
+        </member>
+        <member name="T:Revenj.Serialization.WireSerializationHelper">
+            <summary>
+            Helper class for deserialization
+            </summary>
+        </member>
+        <member name="M:Revenj.Serialization.WireSerializationHelper.Deserialize``1(Revenj.Serialization.IWireSerialization,System.IO.Stream,System.String)">
+            <summary>
+            Deserialize typesafe object without providing context information.
+            .NET objects or value objects don't require context so they can be deserialized
+            without IServiceLocator in context.
+            </summary>
+            <typeparam name="TFormat">serialization format</typeparam>
+            <typeparam name="T">object type</typeparam>
+            <param name="serialization">serialization service</param>
+            <param name="data">serialized object in specified format</param>
+            <returns>deserialized object</returns>
+        </member>
+    </members>
+</doc>

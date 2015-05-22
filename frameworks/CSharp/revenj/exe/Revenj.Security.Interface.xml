@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Revenj.Security.Interface</name>
+    </assembly>
+    <members>
+        <member name="T:Revenj.Security.IAuthentication`1">
+            <summary>
+            Authentication service.
+            For checking if user is authenticated within the system.
+            </summary>
+        </member>
+        <member name="M:Revenj.Security.IAuthentication`1.IsAuthenticated(System.String,`0)">
+            <summary>
+            Check if user with provided password is authenticated within the system.
+            </summary>
+            <param name="user">username</param>
+            <param name="key">key</param>
+            <returns>is user allowed into the system</returns>
+        </member>
+        <member name="T:Revenj.Security.IPermissionManager">
+            <summary>
+            Permission manager service for setting up permission rules
+            and checking access to data.
+            </summary>
+        </member>
+        <member name="M:Revenj.Security.IPermissionManager.CanAccess(System.String,System.Security.Principal.IPrincipal)">
+            <summary>
+            Check if user can access provided identifier.
+            Identifier can be type name, service name or something similar.
+            Rules for access can be defined for smaller parts of identifier.
+            </summary>
+            <param name="identifier">identifier is sliced by . and matched against the rules</param>
+            <param name="user">principal to check</param>
+            <returns>is user allowed to access</returns>
+        </member>
+        <member name="M:Revenj.Security.IPermissionManager.ApplyFilters``1(System.Security.Principal.IPrincipal,System.Linq.IQueryable{``0})">
+            <summary>
+            Filter data based on provided user principal.
+            This will apply various permissions registered for this user and for data of type T
+            If interface is provided, permissions must be defined explicitly for that interface.
+            Filter will be applied on Queryable tree, which can be evaluated at a later time.
+            </summary>
+            <typeparam name="T">data type</typeparam>
+            <param name="user">user principal</param>
+            <param name="data">data to filter</param>
+            <returns>filtered data based on permission rules</returns>
+        </member>
+        <member name="M:Revenj.Security.IPermissionManager.ApplyFilters``1(System.Security.Principal.IPrincipal,``0[])">
+            <summary>
+            Filter data based on provided user principal.
+            This will apply various permissions registered for this user and for data of type T
+            If interface is provided, permissions must be defined explicitly for that interface.
+            Filter will be applied immediately.
+            </summary>
+            <typeparam name="T">data type</typeparam>
+            <param name="user">user principal</param>
+            <param name="data">data to filter</param>
+            <returns>filtered data based on permission rules</returns>
+        </member>
+        <member name="M:Revenj.Security.IPermissionManager.RegisterFilter``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.String,System.Boolean)">
+            <summary>
+            Register filter predicate for data.
+            Apply this filter for specified roles, or when role is missing.
+            Only exact match will be filtered, so if data can be queried through some 
+            interface, explicit registration must be done.
+            </summary>
+            <typeparam name="T">data type</typeparam>
+            <param name="filter">predicate for filtering</param>
+            <param name="role">role for which the principal will be tested</param>
+            <param name="inverse">should filter apply for this role, or when this role is missing</param>
+            <returns>disposable for unregistering filter</returns>
+        </member>
+        <member name="T:Revenj.Security.PermissionManagerHelper">
+            <summary>
+            Helper for permission manager service
+            </summary>
+        </member>
+        <member name="M:Revenj.Security.PermissionManagerHelper.CanAccess``1(Revenj.Security.IPermissionManager)">
+            <summary>
+            Check if current principal bound to thread can access some resource.
+            Resource identity will be provided from type full name.
+            </summary>
+            <typeparam name="T">object type</typeparam>
+            <param name="manager">permission service</param>
+            <returns>is user allowed to access requested resource</returns>
+        </member>
+        <member name="M:Revenj.Security.PermissionManagerHelper.CanAccess(Revenj.Security.IPermissionManager,System.Type)">
+            <summary>
+            Check if current principal bound to thread can access some resource.
+            Resource identity will be provided from target type argument full name.
+            </summary>
+            <param name="manager">permission service</param>
+            <param name="target">type argument</param>
+            <returns>is user allowed to access requested resource</returns>
+        </member>
+        <member name="M:Revenj.Security.PermissionManagerHelper.ApplyFilters``1(Revenj.Security.IPermissionManager,``0[])">
+            <summary>
+            Filter data based on user principal bound to current Thread.
+            This will apply various permissions registered for this user and for data of type T
+            If interface is provided, permissions must be defined explicitly for that interface.
+            </summary>
+            <typeparam name="T">object type</typeparam>
+            <param name="manager">permission service</param>
+            <param name="data">data to filter</param>
+            <returns>filtered data based on permission rules</returns>
+        </member>
+        <member name="T:Revenj.Security.Roles">
+            <summary>
+            Static name for common roles.
+            </summary>
+        </member>
+        <member name="F:Revenj.Security.Roles.Administrator">
+            <summary>
+            Administrator role
+            </summary>
+        </member>
+        <member name="T:Revenj.Security.IPrincipalFactory">
+            <summary>
+            Factory for creating principals for users.
+            </summary>
+        </member>
+        <member name="M:Revenj.Security.IPrincipalFactory.Create(System.Security.Principal.IIdentity)">
+            <summary>
+            Create principal based on provided user information.
+            Principal contains information about what the user is allowed to do.
+            </summary>
+            <param name="user">user identity</param>
+            <returns>principal for user</returns>
+        </member>
+    </members>
+</doc>

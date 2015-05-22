@@ -1,0 +1,29 @@
+{
+  "framework": "revenj",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries",
+      "fortune_url": "/fortunes",
+      "plaintext_url": "/text",
+      "update_url": "/updates",
+      "port": 8999,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "database_os": "Linux",
+      "framework": "Revenj",
+      "language": "C#",
+      "orm": "Micro",
+      "platform": "Mono",
+      "webserver": "IIS?",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Revenj",
+      "notes": "",
+      "versus": "TODO: CSharp nešto?"
+    }
+  }]
+}
